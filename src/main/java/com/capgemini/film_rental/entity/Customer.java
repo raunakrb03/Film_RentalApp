@@ -1,3 +1,4 @@
+package com.capgemini.film_rental.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +30,8 @@ public class Customer {
     private Address address;
 
     @Column(name = "active", nullable = false)
+    private boolean active=true;
+
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 

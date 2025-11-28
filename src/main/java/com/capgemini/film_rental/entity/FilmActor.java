@@ -1,83 +1,48 @@
 package com.capgemini.film_rental.entity;
 
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(
-        name = "film_actor"
-)
-public class FilmActor {
+@Table(name = "film_actor")
+public class FilmActor
+{
 
     @EmbeddedId
     private FilmActorId id;
 
-    // Use @MapsId to tie the relations to the composite key fields
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("actorId")
-    @JoinColumn(name = "actor_id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_film_actor_actor"))
+    @JoinColumn(name = "actor_id",columnDefinition = "SMALLINT UNSIGNED")
+    //@JsonIgnore
     private Actor actor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId("filmId")
-    @JoinColumn(name = "film_id", nullable = false,
-            foreignKey = @ForeignKey(name = "fk_film_actor_film"))
+    @JoinColumn(name = "film_id",columnDefinition = "SMALLINT UNSIGNED")
+    //@JsonIgnore
     private Film film;
 
     @Column(name = "last_update", nullable = false)
     private LocalDateTime lastUpdate;
 
-    public FilmActor() {}
-
-    public FilmActor(Actor actor, Film film, LocalDateTime lastUpdate) {
-        this.actor = actor;
-        this.film = film;
-        this.id = new FilmActorId(
-                actor != null ? actor.getActorId() : null,
-                film != null ? film.getFilmId() : null
-        );
-        this.lastUpdate = lastUpdate;
-    }
-
-    public FilmActorId getId() {
-        return id;
-    }
-
-    public void setId(FilmActorId id) {
-        this.id = id;
-    }
-
-    public Actor getActor() {
-        return actor;
-    }
-
-    public void setActor(Actor actor) {
-        this.actor = actor;
-        if (this.id == null) {
-            this.id = new FilmActorId();
-        }
-        this.id.setActorId(actor != null ? actor.getActorId() : null);
-    }
-
-    public Film getFilm() {
-        return film;
-    }
-
-    public void setFilm(Film film) {
-        this.film = film;
-        if (this.id == null) {
-            this.id = new FilmActorId();
-        }
-        this.id.setFilmId(film != null ? film.getFilmId() : null);
-    }
-
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
+    // Getters, setters, equals, hashCode, toString
 }
+

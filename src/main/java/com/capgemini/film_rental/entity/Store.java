@@ -14,7 +14,7 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
-    private Long storeId;
+    private int storeId;
 
     @OneToOne
     @JoinColumn(name = "manager_staff_id", nullable = false)

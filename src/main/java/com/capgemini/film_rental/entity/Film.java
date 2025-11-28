@@ -119,4 +119,7 @@ public class Film {
         return categories;
     }
 
+    public Integer getFilmId() {
+        return getFilm_id();
+    }
 }

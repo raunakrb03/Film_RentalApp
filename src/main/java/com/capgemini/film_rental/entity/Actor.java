@@ -1,9 +1,10 @@
 package com.capgemini.film_rental.entity;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -11,19 +12,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "actor",indexes = @Index(name = "idx_last_name", columnList = "last_name"))
-public class Actor {
-
+@Table(name = "actor")
+public class Actor
+{
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +33,9 @@ public class Actor {
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
 
-    @Column(name = "last_update", nullable = false,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(name = "last_update", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonIgnore
     private LocalDateTime lastUpdate;
 
     @ManyToMany
@@ -45,6 +44,7 @@ public class Actor {
             joinColumns = @JoinColumn(name = "actor_id"),
             inverseJoinColumns = @JoinColumn(name = "film_id")
     )
+
     @JsonIgnore
     private List<Film> films=new ArrayList<>();
 
@@ -89,31 +89,4 @@ public class Actor {
     public void setFilms(List<Film> films) {
         this.films = films;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(actorId, films, firstName, lastName, lastUpdate);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Actor other = (Actor) obj;
-        return Objects.equals(actorId, other.actorId) && Objects.equals(films, other.films)
-                && Objects.equals(firstName, other.firstName) && Objects.equals(lastName, other.lastName)
-                && Objects.equals(lastUpdate, other.lastUpdate);
-    }
-    @Override
-    public String toString() {
-        return "Actor [actorId=" + actorId + ", firstName=" + firstName + ", lastName=" + lastName + ", lastUpdate="
-                + lastUpdate + ", films=" + films + "]";
-    }
-
-    // Getters, setters, equals, hashCode, toString
-
 }

@@ -16,6 +16,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "actor",indexes = @Index(name = "idx_last_name", columnList = "last_name"))
@@ -105,7 +108,6 @@ public class Actor {
                 && Objects.equals(firstName, other.firstName) && Objects.equals(lastName, other.lastName)
                 && Objects.equals(lastUpdate, other.lastUpdate);
     }
-
     @Override
     public String toString() {
         return "Actor [actorId=" + actorId + ", firstName=" + firstName + ", lastName=" + lastName + ", lastUpdate="

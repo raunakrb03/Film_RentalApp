@@ -1,9 +1,7 @@
 package com.capgemini.film_rental.entity;
 
 
-
 import java.io.Serializable;
-
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,12 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class FilmActorId implements Serializable
-{
-
-
-    private int actorId;
+public class FilmCategoryId implements Serializable {
     private int filmId;
+    private int categoryId;
 
-    // Getters, setters, equals, hashCode
 }
+

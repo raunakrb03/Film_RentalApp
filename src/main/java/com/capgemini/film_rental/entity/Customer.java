@@ -1,8 +1,18 @@
 package com.capgemini.film_rental.entity;
 
-import com.capgemini.film_rental.entity.Address;
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "customer")
@@ -10,11 +20,15 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id", nullable = false)
-    private Integer customerId;
+    @Column(name = "customer_id",columnDefinition = "SMALLINT UNSIGNED")
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", nullable = false)
+    private int customerId;
+
+
+    //store
+    @ManyToOne
+    @JoinColumn(name = "store_id", nullable = false,columnDefinition = "TINYINT UNSIGNED")
+    @JsonIgnore
     private Store store;
 
     @Column(name = "first_name", nullable = false, length = 45)
@@ -26,32 +40,26 @@ public class Customer {
     @Column(name = "email", length = 50)
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false)
+
+    //address
+    @ManyToOne
+    @JoinColumn(name = "address_id", nullable = false,columnDefinition = "SMALLINT UNSIGNED")
     private Address address;
 
-    @Column(name = "active", nullable = false)
-    private boolean active=true;
+
+
+    @Column(name = "active", nullable = false,columnDefinition = "TINYINT(1) DEFAULT 1")
+    private Boolean active=true;
+
     @Column(name = "create_date", nullable = false)
     private LocalDateTime createDate;
 
-    @Column(name = "last_update", nullable = false)
+    @Column(name = "last_update",nullable = true,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdate;
 
-    // Constructors
-    public Customer() {}
 
-    public Customer(Store store, String firstName, String lastName, String email, Address address, Boolean active, LocalDateTime createDate) {
-        this.store = store;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.address = address;
-        this.active = active;
-        this.createDate = createDate;
-    }
 
-    // Getters and Setters
+
     public Integer getCustomerId() {
         return customerId;
     }
@@ -123,4 +131,56 @@ public class Customer {
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(active, address, createDate, customerId, email, firstName, lastName, lastUpdate, store);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Customer other = (Customer) obj;
+        return Objects.equals(active, other.active) && Objects.equals(address, other.address)
+                && Objects.equals(createDate, other.createDate) && Objects.equals(customerId, other.customerId)
+                && Objects.equals(email, other.email) && Objects.equals(firstName, other.firstName)
+                && Objects.equals(lastName, other.lastName) && Objects.equals(lastUpdate, other.lastUpdate)
+                && Objects.equals(store, other.store);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer [customerId=" + customerId + ", store=" + store + ", firstName=" + firstName + ", lastName="
+                + lastName + ", email=" + email + ", address=" + address + ", active=" + active + ", createDate="
+                + createDate + ", lastUpdate=" + lastUpdate + "]";
+    }
+
+    public Customer(Integer customerId, Store store, String firstName, String lastName, String email, Address address,
+                    Boolean active, LocalDateTime createDate, LocalDateTime lastUpdate) {
+        super();
+        this.customerId = customerId;
+        this.store = store;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.address = address;
+        this.active = active;
+        this.createDate = createDate;
+        this.lastUpdate = lastUpdate;
+    }
+    public Customer() {
+
+    }
+
+    public Customer(Integer customerId) {
+        this.customerId=customerId;
+    }
+
+
+
 }

@@ -1,0 +1,13 @@
+package com.capgemini.film_rental.service;
+
+import com.capgemini.film_rental.entity.Actor;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+
+public interface IActorService {
+    public Actor registerActor(Actor actor);
+    public Actor getActorById(int id);
+    public List<Actor> getAllActors();
+   // public Actor updateActorByFirstName(Actor actor);
+}

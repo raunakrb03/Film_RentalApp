@@ -33,6 +33,9 @@ public class Category {
     @Column(name = "last_update", nullable = false,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdate;
 
+
+
+
     @ManyToMany
 
     @JoinTable(
@@ -42,6 +45,8 @@ public class Category {
     )
     @JsonIgnore
     private List<Film> films=new ArrayList<>();
+
+
 
     public int getCategoryId() {
         return categoryId;

@@ -1,7 +1,6 @@
 package com.capgemini.film_rental.entity;
 
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.Objects;
 import com.capgemini.film_rental.entity.enums.Rating;
 import com.capgemini.film_rental.entity.enums.RatingConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

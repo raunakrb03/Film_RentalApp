@@ -1,6 +1,8 @@
 package com.capgemini.film_rental.entity;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -29,7 +31,7 @@ public class Payment {
     private Rental rental;
 
     @Column(name = "amount", nullable = false, precision = 5, scale = 2)
-    private Double amount;
+    private BigDecimal amount;
 
     @Column(name = "payment_date", nullable = false)
     private LocalDateTime paymentDate;
@@ -53,8 +55,8 @@ public class Payment {
     public Rental getRental() { return rental; }
     public void setRental(Rental rental) { this.rental = rental; }
 
-    public Double getAmount() { return amount; }
-    public void setAmount(Double amount) { this.amount = amount; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public LocalDateTime getPaymentDate() { return paymentDate; }
     public void setPaymentDate(LocalDateTime paymentDate) { this.paymentDate = paymentDate; }

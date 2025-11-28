@@ -21,10 +21,10 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id",columnDefinition = "SMALLINT UNSIGNED")
-   
+
     private int customerId;
 
-    
+
     //store
     @ManyToOne
     @JoinColumn(name = "store_id", nullable = false,columnDefinition = "TINYINT UNSIGNED")
@@ -40,14 +40,14 @@ public class Customer {
     @Column(name = "email", length = 50)
     private String email;
 
-    
+
     //address
     @ManyToOne
     @JoinColumn(name = "address_id", nullable = false,columnDefinition = "SMALLINT UNSIGNED")
     private Address address;
 
-    
-    
+
+
     @Column(name = "active", nullable = false,columnDefinition = "TINYINT(1) DEFAULT 1")
     private Boolean active=true;
 
@@ -57,130 +57,130 @@ public class Customer {
     @Column(name = "last_update",nullable = true,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdate;
 
-    
-    
-    
-	public Integer getCustomerId() {
-		return customerId;
-	}
 
-	public void setCustomerId(Integer customerId) {
-		this.customerId = customerId;
-	}
 
-	public Store getStore() {
-		return store;
-	}
 
-	public void setStore(Store store) {
-		this.store = store;
-	}
+    public Integer getCustomerId() {
+        return customerId;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public void setCustomerId(Integer customerId) {
+        this.customerId = customerId;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public Store getStore() {
+        return store;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public void setStore(Store store) {
+        this.store = store;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public Address getAddress() {
-		return address;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public Boolean getActive() {
-		return active;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+    public Address getAddress() {
+        return address;
+    }
 
-	public LocalDateTime getCreateDate() {
-		return createDate;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	public void setCreateDate(LocalDateTime createDate) {
-		this.createDate = createDate;
-	}
+    public Boolean getActive() {
+        return active;
+    }
 
-	public LocalDateTime getLastUpdate() {
-		return lastUpdate;
-	}
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	public void setLastUpdate(LocalDateTime lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(active, address, createDate, customerId, email, firstName, lastName, lastUpdate, store);
-	}
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Customer other = (Customer) obj;
-		return Objects.equals(active, other.active) && Objects.equals(address, other.address)
-				&& Objects.equals(createDate, other.createDate) && Objects.equals(customerId, other.customerId)
-				&& Objects.equals(email, other.email) && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(lastName, other.lastName) && Objects.equals(lastUpdate, other.lastUpdate)
-				&& Objects.equals(store, other.store);
-	}
+    public LocalDateTime getLastUpdate() {
+        return lastUpdate;
+    }
 
-	@Override
-	public String toString() {
-		return "Customer [customerId=" + customerId + ", store=" + store + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", email=" + email + ", address=" + address + ", active=" + active + ", createDate="
-				+ createDate + ", lastUpdate=" + lastUpdate + "]";
-	}
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
-	public Customer(Integer customerId, Store store, String firstName, String lastName, String email, Address address,
-			Boolean active, LocalDateTime createDate, LocalDateTime lastUpdate) {
-		super();
-		this.customerId = customerId;
-		this.store = store;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.address = address;
-		this.active = active;
-		this.createDate = createDate;
-		this.lastUpdate = lastUpdate;
-	}
-	public Customer() {
-		
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(active, address, createDate, customerId, email, firstName, lastName, lastUpdate, store);
+    }
 
-	public Customer(Integer customerId) {
-		this.customerId=customerId;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Customer other = (Customer) obj;
+        return Objects.equals(active, other.active) && Objects.equals(address, other.address)
+                && Objects.equals(createDate, other.createDate) && Objects.equals(customerId, other.customerId)
+                && Objects.equals(email, other.email) && Objects.equals(firstName, other.firstName)
+                && Objects.equals(lastName, other.lastName) && Objects.equals(lastUpdate, other.lastUpdate)
+                && Objects.equals(store, other.store);
+    }
 
-    
-    
+    @Override
+    public String toString() {
+        return "Customer [customerId=" + customerId + ", store=" + store + ", firstName=" + firstName + ", lastName="
+                + lastName + ", email=" + email + ", address=" + address + ", active=" + active + ", createDate="
+                + createDate + ", lastUpdate=" + lastUpdate + "]";
+    }
+
+    public Customer(Integer customerId, Store store, String firstName, String lastName, String email, Address address,
+                    Boolean active, LocalDateTime createDate, LocalDateTime lastUpdate) {
+        super();
+        this.customerId = customerId;
+        this.store = store;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.address = address;
+        this.active = active;
+        this.createDate = createDate;
+        this.lastUpdate = lastUpdate;
+    }
+    public Customer() {
+
+    }
+
+    public Customer(Integer customerId) {
+        this.customerId=customerId;
+    }
+
+
+
 }

@@ -33,11 +33,11 @@ public class Category {
     @Column(name = "last_update", nullable = false,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdate;
 
-
-
-
+    
+    
+    
     @ManyToMany
-
+   
     @JoinTable(
             name = "film_category",
             joinColumns = @JoinColumn(name = "category_id"),
@@ -46,65 +46,65 @@ public class Category {
     @JsonIgnore
     private List<Film> films=new ArrayList<>();
 
+    
+    
+	public int getCategoryId() {
+		return categoryId;
+	}
 
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
 
-    public int getCategoryId() {
-        return categoryId;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public LocalDateTime getLastUpdate() {
+		return lastUpdate;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setLastUpdate(LocalDateTime lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
 
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
-    }
+	public List<Film> getFilms() {
+		return films;
+	}
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
+	public void setFilms(List<Film> films) {
+		this.films = films;
+	}
 
-    public List<Film> getFilms() {
-        return films;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(categoryId, films, lastUpdate, name);
+	}
 
-    public void setFilms(List<Film> films) {
-        this.films = films;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Category other = (Category) obj;
+		return Objects.equals(categoryId, other.categoryId) && Objects.equals(films, other.films)
+				&& Objects.equals(lastUpdate, other.lastUpdate) && Objects.equals(name, other.name);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(categoryId, films, lastUpdate, name);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Category other = (Category) obj;
-        return Objects.equals(categoryId, other.categoryId) && Objects.equals(films, other.films)
-                && Objects.equals(lastUpdate, other.lastUpdate) && Objects.equals(name, other.name);
-    }
-
-    @Override
-    public String toString() {
-        return "Category [categoryId=" + categoryId + ", name=" + name + ", lastUpdate=" + lastUpdate + ", films="
-                + films + "]";
-    }
-
-
+	@Override
+	public String toString() {
+		return "Category [categoryId=" + categoryId + ", name=" + name + ", lastUpdate=" + lastUpdate + ", films="
+				+ films + "]";
+	}
+    
+    
 
     // Getters, setters, equals, hashCode, toString
 }

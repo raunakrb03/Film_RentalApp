@@ -42,9 +42,9 @@ public class Film {
     @Column(name = "release_year",columnDefinition = "YEAR")
     private Integer releaseYear;
 
-
+    
     //Language
-
+   
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "language_id", nullable = false,columnDefinition = "TINYINT UNSIGNED")
@@ -55,11 +55,11 @@ public class Film {
     @JoinColumn(name = "original_language_id",columnDefinition = "TINYINT UNSIGNED")
     private Language originalLanguage;
 
-
-
+    
+    
     //Inventory
-
-
+    
+    
     @Column(name = "rental_duration", nullable = false, columnDefinition = "TINYINT UNSIGNED DEFAULT 3")
     private int rentalDuration=3;
 
@@ -81,37 +81,37 @@ public class Film {
 
     @Column(name = "last_update", nullable = false,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdate;
-
-
-
-
+    
+    
+    
+    
 
     // Many-to-many relationship with Actor
     @ManyToMany
-
+   
     @JoinTable(
-            name = "film_actor", // Join table name
-            joinColumns = @JoinColumn(name = "film_id",columnDefinition = "SMALLINT UNSIGNED"), // Foreign key in the join table referencing Film
-            inverseJoinColumns = @JoinColumn(name = "actor_id",columnDefinition = "SMALLINT UNSIGNED") // Foreign key in the join table referencing Actor
+        name = "film_actor", // Join table name
+        joinColumns = @JoinColumn(name = "film_id",columnDefinition = "SMALLINT UNSIGNED"), // Foreign key in the join table referencing Film
+        inverseJoinColumns = @JoinColumn(name = "actor_id",columnDefinition = "SMALLINT UNSIGNED") // Foreign key in the join table referencing Actor
     )
     @JsonIgnore
     private List<Actor> actors=new ArrayList<>();
 
-
-
-
-
+    
+    
+    
+    
     // Many-to-many relationship with Category
     @ManyToMany
     @JoinTable(
-            name = "film_category", // Join table name
-            joinColumns = @JoinColumn(name = "film_id",columnDefinition = "SMALLINT UNSIGNED"), // Foreign key in the join table referencing Film
-            inverseJoinColumns = @JoinColumn(name = "category_id",columnDefinition = "TINYINT UNSIGNED") // Foreign key in the join table referencing Category
+        name = "film_category", // Join table name
+        joinColumns = @JoinColumn(name = "film_id",columnDefinition = "SMALLINT UNSIGNED"), // Foreign key in the join table referencing Film
+        inverseJoinColumns = @JoinColumn(name = "category_id",columnDefinition = "TINYINT UNSIGNED") // Foreign key in the join table referencing Category
     )
     @JsonIgnore
     private List<Category> categories=new ArrayList<>();
-
-
+    
+    
 //    @ManyToOne
 //    @JoinColumn(name = "title", referencedColumnName = "title", insertable = false, updatable = false)
 //    private FilmText filmText;
@@ -197,29 +197,29 @@ public class Film {
         this.replacementCost = replacementCost;
     }
 
+    
 
+    
 
+    
 
+	public Rating getRating() {
+		return rating;
+	}
 
+	public void setRating(Rating rating) {
+		this.rating = rating;
+	}
 
+	public String getSpecialFeatures() {
+		return specialFeatures;
+	}
 
-    public Rating getRating() {
-        return rating;
-    }
+	public void setSpecialFeatures(String specialFeatures) {
+		this.specialFeatures = specialFeatures;
+	}
 
-    public void setRating(Rating rating) {
-        this.rating = rating;
-    }
-
-    public String getSpecialFeatures() {
-        return specialFeatures;
-    }
-
-    public void setSpecialFeatures(String specialFeatures) {
-        this.specialFeatures = specialFeatures;
-    }
-
-    public LocalDateTime getLastUpdate() {
+	public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
 
@@ -244,40 +244,40 @@ public class Film {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Film other = (Film) obj;
-        return Objects.equals(actors, other.actors) && Objects.equals(categories, other.categories)
-                && Objects.equals(description, other.description) && filmId == other.filmId
-                && Objects.equals(language, other.language) && Objects.equals(lastUpdate, other.lastUpdate)
-                && Objects.equals(length, other.length) && Objects.equals(originalLanguage, other.originalLanguage)
-                && rating == other.rating && Objects.equals(releaseYear, other.releaseYear)
-                && rentalDuration == other.rentalDuration && Objects.equals(rentalRate, other.rentalRate)
-                && Objects.equals(replacementCost, other.replacementCost)
-                && Objects.equals(specialFeatures, other.specialFeatures) && Objects.equals(title, other.title);
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Film other = (Film) obj;
+		return Objects.equals(actors, other.actors) && Objects.equals(categories, other.categories)
+				&& Objects.equals(description, other.description) && filmId == other.filmId
+				&& Objects.equals(language, other.language) && Objects.equals(lastUpdate, other.lastUpdate)
+				&& Objects.equals(length, other.length) && Objects.equals(originalLanguage, other.originalLanguage)
+				&& rating == other.rating && Objects.equals(releaseYear, other.releaseYear)
+				&& rentalDuration == other.rentalDuration && Objects.equals(rentalRate, other.rentalRate)
+				&& Objects.equals(replacementCost, other.replacementCost)
+				&& Objects.equals(specialFeatures, other.specialFeatures) && Objects.equals(title, other.title);
+	}
 
     @Override
-    public int hashCode() {
-        return Objects.hash(actors, categories, description, filmId, language, lastUpdate, length, originalLanguage,
-                rating, releaseYear, rentalDuration, rentalRate, replacementCost, specialFeatures, title);
-    }
+	public int hashCode() {
+		return Objects.hash(actors, categories, description, filmId, language, lastUpdate, length, originalLanguage,
+				rating, releaseYear, rentalDuration, rentalRate, replacementCost, specialFeatures, title);
+	}
 
-    @Override
-    public String toString() {
-        return "Film [filmId=" + filmId + ", title=" + title + ", description=" + description + ", releaseYear="
-                + releaseYear + ", language=" + language + ", originalLanguage=" + originalLanguage
-                + ", rentalDuration=" + rentalDuration + ", rentalRate=" + rentalRate + ", length=" + length
-                + ", replacementCost=" + replacementCost + ", rating=" + rating + ", specialFeatures=" + specialFeatures
-                + ", lastUpdate=" + lastUpdate + ", actors=" + actors + ", categories=" + categories + "]";
-    }
+	@Override
+	public String toString() {
+		return "Film [filmId=" + filmId + ", title=" + title + ", description=" + description + ", releaseYear="
+				+ releaseYear + ", language=" + language + ", originalLanguage=" + originalLanguage
+				+ ", rentalDuration=" + rentalDuration + ", rentalRate=" + rentalRate + ", length=" + length
+				+ ", replacementCost=" + replacementCost + ", rating=" + rating + ", specialFeatures=" + specialFeatures
+				+ ", lastUpdate=" + lastUpdate + ", actors=" + actors + ", categories=" + categories + "]";
+	}
+    
+    
 
-
-
-
+    
 }

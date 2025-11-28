@@ -1,6 +1,5 @@
 package com.capgemini.film_rental.entity;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,69 +31,70 @@ public class Country {
     @Column(name = "last_update", nullable = false,columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdate;
 
+    
+    //List of cities
     @OneToMany(mappedBy = "country")
     @JsonIgnore
     private List<City> cities=new ArrayList<>();
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(cities, country, countryId, lastUpdate);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(cities, country, countryId, lastUpdate);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Country other = (Country) obj;
-        return Objects.equals(cities, other.cities) && Objects.equals(country, other.country)
-                && Objects.equals(countryId, other.countryId) && Objects.equals(lastUpdate, other.lastUpdate);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Country other = (Country) obj;
+		return Objects.equals(cities, other.cities) && Objects.equals(country, other.country)
+				&& Objects.equals(countryId, other.countryId) && Objects.equals(lastUpdate, other.lastUpdate);
+	}
 
-    public int getCountryId() {
-        return countryId;
-    }
+	public int getCountryId() {
+		return countryId;
+	}
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
-    }
+	public void setCountryId(int countryId) {
+		this.countryId = countryId;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	public String getCountry() {
+		return country;
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
-    }
+	public LocalDateTime getLastUpdate() {
+		return lastUpdate;
+	}
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
+	public void setLastUpdate(LocalDateTime lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
 
-    public List<City> getCities() {
-        return cities;
-    }
+	public List<City> getCities() {
+		return cities;
+	}
 
-    public void setCities(List<City> cities) {
-        this.cities = cities;
-    }
+	public void setCities(List<City> cities) {
+		this.cities = cities;
+	}
 
-    @Override
-    public String toString() {
-        return "Country [countryId=" + countryId + ", country=" + country + ", lastUpdate=" + lastUpdate + "]";
-    }
+	@Override
+	public String toString() {
+		return "Country [countryId=" + countryId + ", country=" + country + ", lastUpdate=" + lastUpdate + "]";
+	}
 
     // Getters, setters, equals, hashCode, toString
-
-
-
-
+	
+	
+    
+    
 }
-

@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +18,9 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "actor")
-public class Actor
+public class Actor 
 {
-    @Id
+	@Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "actor_id",columnDefinition = "SMALLINT UNSIGNED")
@@ -37,56 +36,56 @@ public class Actor
     //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonIgnore
     private LocalDateTime lastUpdate;
-
+    
     @ManyToMany
     @JoinTable(
             name = "film_actor",
             joinColumns = @JoinColumn(name = "actor_id"),
             inverseJoinColumns = @JoinColumn(name = "film_id")
     )
-
+    
     @JsonIgnore
     private List<Film> films=new ArrayList<>();
+    
+    
 
+	public int getActorId() {
+		return actorId;
+	}
 
+	public void setActorId(int actorId) {
+		this.actorId = actorId;
+	}
 
-    public int getActorId() {
-        return actorId;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public void setActorId(int actorId) {
-        this.actorId = actorId;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public LocalDateTime getLastUpdate() {
+		return lastUpdate;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setLastUpdate(LocalDateTime lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
 
-    public LocalDateTime getLastUpdate() {
-        return lastUpdate;
-    }
+	public List<Film> getFilms() {
+		return films;
+	}
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public List<Film> getFilms() {
-        return films;
-    }
-
-    public void setFilms(List<Film> films) {
-        this.films = films;
-    }
+	public void setFilms(List<Film> films) {
+		this.films = films;
+	}
 }

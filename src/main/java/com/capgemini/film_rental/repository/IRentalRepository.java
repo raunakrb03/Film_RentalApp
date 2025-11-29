@@ -1,4 +1,7 @@
 package com.capgemini.film_rental.repository;
 
-public interface IRentalRepository {
+import com.capgemini.film_rental.entity.Rental;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface IRentalRepository{
 }

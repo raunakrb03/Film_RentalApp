@@ -19,7 +19,8 @@ public class FilmDTO {
     private String rating;
     private String specialFeatures;
     private LocalDateTime lastUpdate;
-    private List<String> categories;   // Instead of Category entity, use category names
+    private List<String> categories;
+    private Long rentalCount;// Instead of Category entity, use category names
 
     // Constructors
     public FilmDTO() {}
@@ -45,7 +46,7 @@ public class FilmDTO {
     }
 
     // Getters and Setters
-    int getFilmId() { return filmId; }
+    public int getFilmId() { return filmId; }
     public void setFilmId(int filmId) { this.filmId = filmId; }
 
     public String getTitle() { return title; }
@@ -86,4 +87,8 @@ public class FilmDTO {
 
     public List<String> getCategories() { return categories; }
     public void setCategories(List<String> categories) { this.categories = categories; }
+
+    public Long getRentalCount() { return rentalCount; }
+    public void setRentalCount(Long rentalCount) { this.rentalCount = rentalCount; }
+
 }

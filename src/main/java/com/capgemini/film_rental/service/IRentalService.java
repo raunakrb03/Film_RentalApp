@@ -1,5 +1,6 @@
 package com.capgemini.film_rental.service;
 
+import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.entity.Actor;
 import com.capgemini.film_rental.entity.Rental;
 
@@ -12,4 +13,5 @@ public interface IRentalService {
     //leena
     //raunak
     //praphul
+    List<FilmDTO> getTopTenFilmsByStore(Integer storeId);
 }

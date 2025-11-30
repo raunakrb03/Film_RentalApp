@@ -2,6 +2,9 @@ package com.capgemini.film_rental;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 
 //hello raunak1
 
@@ -9,8 +12,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FilmRentalApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FilmRentalApplication.class, args);
-	}
+    private static final Logger logger = LoggerFactory.getLogger(FilmRentalApplication.class);
+
+    public static void main(String[] args) {
+        var ctx = SpringApplication.run(FilmRentalApplication.class, args);
+        Environment env = ctx.getEnvironment();
+        logger.info("Application '{}' started with datasource.url={}", env.getProperty("spring.application.name"), env.getProperty("spring.datasource.url"));
+    }
 
 }

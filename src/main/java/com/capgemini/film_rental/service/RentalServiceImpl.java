@@ -1,27 +1,68 @@
+
 package com.capgemini.film_rental.service;
+
 import com.capgemini.film_rental.dto.FilmDTO;
+import com.capgemini.film_rental.dto.RentalDTO;
+import com.capgemini.film_rental.dtoConverter.RentalConverter;
+import com.capgemini.film_rental.entity.Customer;
+import com.capgemini.film_rental.entity.Inventory;
 import com.capgemini.film_rental.entity.Rental;
+import com.capgemini.film_rental.entity.Staff;
+import com.capgemini.film_rental.repository.ICustomerRepository;
+import com.capgemini.film_rental.repository.IInventoryRepository;
+import com.capgemini.film_rental.repository.IRentalRepository;
+import com.capgemini.film_rental.repository.IStaffRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class RentalServiceImpl implements IRentalService {
 
+    @Autowired
+    private IRentalRepository rentalRepo;
+
+    @Autowired
+    private IInventoryRepository inventoryRepo;
+
+    @Autowired
+    private ICustomerRepository customerRepo;
+
+    @Autowired
+    private IStaffRepository staffRepo;
+
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * Rent a film using DTO and convert to entity.
+     */
     @Override
-    @Transactional
-    public Rental rentFilm(Rental rental) {
-        entityManager.persist(rental);
-        return rental;
+    public Rental rentFilm(RentalDTO dto) {
+        Inventory inventory = inventoryRepo.findById(dto.getInventoryId())
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+        Customer customer = customerRepo.findById(dto.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        Staff staff = staffRepo.findById(dto.getStaffId())
+                .orElseThrow(() -> new RuntimeException("Staff not found"));
+
+        Rental rental = RentalConverter.toEntity(dto, inventory, customer, staff);
+        rental.setLastUpdate(LocalDateTime.now());
+
+        return rentalRepo.save(rental);
     }
 
+
+
+    /**
+     * Get top 10 most rented films for a given store.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<FilmDTO> getTopTenFilmsByStore(Integer storeId) {
@@ -29,7 +70,6 @@ public class RentalServiceImpl implements IRentalService {
             throw new IllegalArgumentException("storeId must be a positive integer");
         }
 
-        // JPQL query to fetch FilmDTO with basic details
         String jpql = """
             SELECT new com.capgemini.film_rental.dto.FilmDTO(
                 f.filmId,
@@ -66,7 +106,7 @@ public class RentalServiceImpl implements IRentalService {
 
         List<FilmDTO> films = query.getResultList();
 
-        // Populate rentalCount for each film
+        // Populate rental count for each film
         for (FilmDTO film : films) {
             Long count = entityManager.createQuery("""
                 SELECT COUNT(r.rentalId)

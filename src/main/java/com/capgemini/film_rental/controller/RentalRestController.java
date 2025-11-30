@@ -2,7 +2,10 @@
 package com.capgemini.film_rental.controller;
 
 import com.capgemini.film_rental.dto.FilmDTO;
+import com.capgemini.film_rental.dto.RentalDTO;
+import com.capgemini.film_rental.entity.Rental;
 import com.capgemini.film_rental.service.IRentalService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +17,17 @@ public class RentalRestController {
 
     private final IRentalService rentalService;
 
+    @PostMapping("/add")
+    public ResponseEntity<Rental> rentFilm(@RequestBody RentalDTO rental){
+        Rental savedRental = rentalService.rentFilm(rental);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedRental);
+    }
+
     public RentalRestController(IRentalService rentalService) {
         this.rentalService = rentalService;
     }
+
+
 
     /**
      * Display top 10 most rented Films of a Store

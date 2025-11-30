@@ -1,2 +1,29 @@
 
-package com.capgemini.film_rental.dto.aggregates; import java.math.BigDecimal; import java.time.LocalDate; public class StoreRevenueByDateDTO { private int storeId; private LocalDate date; private BigDecimal amount; public StoreRevenueByDateDTO(int s, LocalDate d, BigDecimal a){this.storeId=s; this.date=d; this.amount=a;} public int getStoreId(){return storeId;} public LocalDate getDate(){return date;} public BigDecimal getAmount(){return amount;} }
+package com.capgemini.film_rental.dto.aggregates;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+public class StoreRevenueByDateDTO {
+    private int storeId;
+    private LocalDate date;
+    private BigDecimal amount;
+
+    public StoreRevenueByDateDTO(int s, LocalDate d, BigDecimal a) {
+        this.storeId = s;
+        this.date = d;
+        this.amount = a;
+    }
+
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+}

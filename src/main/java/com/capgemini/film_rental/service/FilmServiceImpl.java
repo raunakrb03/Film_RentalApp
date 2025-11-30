@@ -16,10 +16,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @Transactional
 public class FilmServiceImpl implements IFilmService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FilmServiceImpl.class);
 
     private final IFilmRepository filmRepo;
     private final ICategoryRepository categoryRepo;
@@ -54,8 +58,11 @@ public class FilmServiceImpl implements IFilmService {
         }
         if (dto.getRentalRate() != null) f.setRentalRate(dto.getRentalRate());
         if (dto.getLength() != null) f.setLength(dto.getLength());
-        filmRepo.save(f);
-        return "Record Created Successfully";
+        // Use saveAndFlush so the insert is executed immediately (helps debugging and visibility in DB)
+        Film saved = filmRepo.saveAndFlush(f);
+        // log id and return it so caller can verify where the record was persisted
+        logger.info("Saved Film with id={} title={}", saved.getFilmId(), saved.getTitle());
+        return "Record Created Successfully id=" + saved.getFilmId();
     }
 
     @Override

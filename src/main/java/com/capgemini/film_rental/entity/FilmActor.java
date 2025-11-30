@@ -32,9 +32,8 @@ import jakarta.persistence.Table;
 	    //@JsonIgnore
 	    private Film film;
 
-	    @Column(name = "last_update", nullable = false)
+	    @Column(name = "last_update", nullable = false, insertable=false, updatable=false)
 	    private LocalDateTime lastUpdate;
 
 	    // Getters, setters, equals, hashCode, toString
 	}
-

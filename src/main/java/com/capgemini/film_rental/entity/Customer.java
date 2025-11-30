@@ -40,6 +40,9 @@ public class Customer {
     @Column(name = "email", length = 50)
     private String email;
 
+    @Column(name = "password", length = 60, nullable = true)
+    private String password;
+
 
     //address
     @ManyToOne
@@ -182,5 +185,13 @@ public class Customer {
     }
 
 
+    public String getPassword() {
+        return this.password;
+    }
+
+    // Add setter for password so registration can persist hashed password
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

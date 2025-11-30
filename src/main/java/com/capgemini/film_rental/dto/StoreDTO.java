@@ -1,36 +1,4 @@
-package com.capgemini.film_rental.dto;
 
-
-
-
-import java.time.LocalDateTime;
-
-public class StoreDTO {
-
-    private Long storeId;
-    private Long managerStaffId;
-    private Integer addressId;
-    private LocalDateTime lastUpdate;
-
-    public StoreDTO() {}
-
-    public StoreDTO(Long storeId, Long managerStaffId, Integer addressId, LocalDateTime lastUpdate) {
-        this.storeId = storeId;
-        this.managerStaffId = managerStaffId;
-        this.addressId = addressId;
-        this.lastUpdate = lastUpdate;
-    }
-
-    // Getters and Setters
-    public Long getStoreId() { return storeId; }
-    public void setStoreId(Long storeId) { this.storeId = storeId; }
-
-    public Long getManagerStaffId() { return managerStaffId; }
-    public void setManagerStaffId(Long managerStaffId) { this.managerStaffId = managerStaffId; }
-
-    public Integer getAddressId() { return addressId; }
-    public void setAddressId(Integer addressId) { this.addressId = addressId; }
-
-    public LocalDateTime getLastUpdate() { return lastUpdate; }
-    public void setLastUpdate(LocalDateTime lastUpdate) { this.lastUpdate = lastUpdate; }
+package com.capgemini.film_rental.dto; public class StoreDTO { private int storeId; private Integer managerStaffId; private Integer addressId; public int getStoreId(){return storeId;} public void setStoreId(int v){storeId=v;} public Integer getManagerStaffId(){return managerStaffId;} public void setManagerStaffId(Integer v){managerStaffId=v;} public Integer getAddressId(){return addressId;} public void setAddressId(Integer v){addressId=v;} public static class ManagerDetails{ public String firstName; public String lastName; public String email; public String phone; public String getFirstName(){return firstName;} public String getLastName(){return lastName;} public String getEmail(){return email;} public String getPhone(){return phone;} }
+  public static class ManagerAndStoreView{ public String managerFirstName; public String managerLastName; public String managerEmail; public String managerPhone; public String storeAddress; public String storeCity; public String storePhone; }
 }

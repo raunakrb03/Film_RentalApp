@@ -1,64 +1,81 @@
-
 package com.capgemini.film_rental.service;
 
 import com.capgemini.film_rental.dto.FilmDTO;
+import com.capgemini.film_rental.dto.RentalCreateDTO;
 import com.capgemini.film_rental.dto.RentalDTO;
-import com.capgemini.film_rental.dtoConverter.RentalConverter;
-import com.capgemini.film_rental.entity.Customer;
 import com.capgemini.film_rental.entity.Inventory;
 import com.capgemini.film_rental.entity.Rental;
 import com.capgemini.film_rental.entity.Staff;
-import com.capgemini.film_rental.repository.ICustomerRepository;
-import com.capgemini.film_rental.repository.IInventoryRepository;
-import com.capgemini.film_rental.repository.IRentalRepository;
-import com.capgemini.film_rental.repository.IStaffRepository;
+import com.capgemini.film_rental.entity.Customer;
+import com.capgemini.film_rental.exception.NotFoundException;
+import com.capgemini.film_rental.repository.*;
+import com.capgemini.film_rental.service.IRentalService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
+@Transactional
 public class RentalServiceImpl implements IRentalService {
 
-    @Autowired
-    private IRentalRepository rentalRepo;
+    private final com.capgemini.film_rental.repository.IRentalRepository repo;
+    private final com.capgemini.film_rental.repository.IInventoryRepository invRepo;
+    private final com.capgemini.film_rental.repository.ICustomerRepository custRepo;
+    private final com.capgemini.film_rental.repository.IStaffRepository staffRepo;
 
-    @Autowired
-    private IInventoryRepository inventoryRepo;
-
-    @Autowired
-    private ICustomerRepository customerRepo;
-
-    @Autowired
-    private IStaffRepository staffRepo;
-
+    public RentalServiceImpl(IRentalRepository repo, IInventoryRepository invRepo, ICustomerRepository custRepo, IStaffRepository staffRepo) {
+        this.repo = repo;
+        this.invRepo = invRepo;
+        this.custRepo = custRepo;
+        this.staffRepo = staffRepo;
+    }
     @PersistenceContext
     private EntityManager entityManager;
 
-    /**
-     * Rent a film using DTO and convert to entity.
-     */
     @Override
-    public Rental rentFilm(RentalDTO dto) {
-        Inventory inventory = inventoryRepo.findById(dto.getInventoryId())
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
-        Customer customer = customerRepo.findById(dto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-        Staff staff = staffRepo.findById(dto.getStaffId())
-                .orElseThrow(() -> new RuntimeException("Staff not found"));
-
-        Rental rental = RentalConverter.toEntity(dto, inventory, customer, staff);
-        rental.setLastUpdate(LocalDateTime.now());
-
-        return rentalRepo.save(rental);
+    public String create(RentalCreateDTO dto) {
+        Inventory inv = invRepo.findById(dto.getInventoryId()).orElseThrow(() -> new NotFoundException("Inventory not found"));
+        Customer cust = custRepo.findById(dto.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer not found"));
+        Staff staff = staffRepo.findById(dto.getStaffId()).orElseThrow(() -> new NotFoundException("Staff not found"));
+        Rental r = new Rental();
+        r.setInventory(inv);
+        r.setCustomer(cust);
+        r.setStaff(staff);
+        r.setRentalDate(LocalDateTime.now());
+        repo.save(r);
+        return "Record Created Successfully";
     }
 
+    @Override
+    public List<Integer> filmsRentedToCustomer(int customerId) {
+        return repo.filmsRentedToCustomer(customerId);
+    }
 
+    @Override
+    public RentalDTO updateReturnDate(int rentalId, String returnDateIso) {
+        Rental r = repo.findById(rentalId).orElseThrow(() -> new NotFoundException("Rental not found"));
+        try {
+            r.setReturnDate(LocalDateTime.parse(returnDateIso));
+        } catch (DateTimeParseException e) {
+            r.setReturnDate(LocalDate.parse(returnDateIso).atStartOfDay());
+        }
+        repo.save(r);
+        RentalDTO dto = new RentalDTO();
+        dto.setRentalId(r.getRentalId());
+        dto.setRentalDate(r.getRentalDate());
+        dto.setReturnDate(r.getReturnDate());
+        dto.setInventoryId(r.getInventory().getInventoryId());
+        dto.setCustomerId(r.getCustomer().getCustomerId());
+        dto.setStaffId(r.getStaff().getStaffId());
+        return dto;
+    }
 
     /**
      * Get top 10 most rented films for a given store.

@@ -1,4 +1,22 @@
 package com.capgemini.film_rental.service;
 
-public class IStaffService {
+import com.capgemini.film_rental.dto.StaffDTO;
+import com.capgemini.film_rental.dto.StaffCreateDTO;
+
+import java.util.List;
+
+public interface IStaffService {
+    String create(StaffCreateDTO dto);
+
+    StaffDTO updateLastName(int id, String ln);
+
+    StaffDTO updateFirstName(int id, String fn);
+
+    java.util.List<StaffDTO> findByPhone(String phone);
+
+    java.util.List<StaffDTO> findByCountry(String country);
+
+    java.util.List<StaffDTO> findByFirstName(String fn);
+
+    java.util.List<StaffDTO> findByLastName(String ln);
 }

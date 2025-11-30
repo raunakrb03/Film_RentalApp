@@ -1,4 +1,17 @@
 package com.capgemini.film_rental.service;
 
-public class IPaymentService {
+import com.capgemini.film_rental.dto.PaymentCreateDTO;
+import com.capgemini.film_rental.dto.aggregates.FilmRevenueDTO;
+import com.capgemini.film_rental.dto.aggregates.StoreRevenueByDateDTO;
+
+import java.util.List;
+
+public interface IPaymentService {
+    String create(PaymentCreateDTO dto);
+
+    List<FilmRevenueDTO> cumulativeRevenueOfAllFilmsByStore(int storeId);
+
+    List<FilmRevenueDTO> cumulativeRevenueOfAllFilmsAcrossStores();
+
+    List<StoreRevenueByDateDTO> cumulativeRevenueAllStoresDatewise();
 }

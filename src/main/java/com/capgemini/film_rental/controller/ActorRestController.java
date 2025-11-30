@@ -15,7 +15,7 @@ public class ActorRestController {
     @Autowired
     IActorService actorService;
 
-    @GetMapping("rentalrat/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Actor> getActorById(@PathVariable int id){
        return  ResponseEntity.ok(actorService.getActorById(id));
     }

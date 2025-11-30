@@ -1,3 +1,20 @@
 
 package com.capgemini.film_rental.mapper; import com.capgemini.film_rental.dto.FilmDTO; import com.capgemini.film_rental.entity.*; import java.util.stream.Collectors;
-public class FilmMapper { public static FilmDTO toDTO(Film f){ FilmDTO dto=new FilmDTO(); dto.setFilmId(f.getFilmId()); dto.setTitle(f.getTitle()); dto.setDescription(f.getDescription()); dto.setReleaseYear(f.getReleaseYear()); dto.setLanguageId(f.getLanguage()!=null?f.getLanguage().getLanguageId():null); dto.setOriginalLanguageId(f.getOriginalLanguage()!=null?f.getOriginalLanguage().getLanguageId():null); dto.setRentalDuration(f.getRentalDuration()); dto.setRentalRate(f.getRentalRate()); dto.setLength(f.getLength()); dto.setReplacementCost(f.getReplacementCost()); dto.setRating(f.getRating()!=null?f.getRating().name().replace("_","-"):null); dto.setSpecialFeatures(f.getSpecialFeatures()); dto.setLastUpdate(f.getLastUpdate()); dto.setCategoryIds(f.getCategories()==null?null:f.getCategories().stream().map(c->c.getCategoryId()).collect(Collectors.toList())); dto.setActorIds(f.getActors()==null?null:f.getActors().stream().map(a->a.getActorId()).collect(Collectors.toList())); return dto; } }
+public class FilmMapper {
+    public static FilmDTO toDTO(Film f){
+        FilmDTO dto=new FilmDTO();
+        dto.setFilmId(f.getFilmId());
+        dto.setTitle(f.getTitle());
+        dto.setDescription(f.getDescription());
+        dto.setReleaseYear(f.getReleaseYear());
+        dto.setLanguageId(f.getLanguage()!=null?f.getLanguage().getLanguageId():null);
+        dto.setOriginalLanguageId(f.getOriginalLanguage()!=null?f.getOriginalLanguage().getLanguageId():null);
+        dto.setRentalDuration(f.getRentalDuration());
+        dto.setRentalRate(f.getRentalRate()); dto.setLength(f.getLength());
+        dto.setReplacementCost(f.getReplacementCost());
+        dto.setRating(f.getRating()!=null?f.getRating().name().replace("_","-"):null);
+        dto.setSpecialFeatures(f.getSpecialFeatures());
+        dto.setLastUpdate(f.getLastUpdate());
+        dto.setCategoryIds(f.getCategories()==null?null:f.getCategories().stream().map(c->c.getCategoryId()).collect(Collectors.toList()));
+        dto.setActorIds(f.getActors()==null?null:f.getActors().stream().map(a->a.getActorId()).collect(Collectors.toList()));
+        return dto; } }

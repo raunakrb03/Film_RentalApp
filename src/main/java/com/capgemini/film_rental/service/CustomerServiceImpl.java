@@ -131,4 +131,29 @@ public class CustomerServiceImpl implements ICustomerService {
         return repo.findByPhone(phone).stream().findFirst().map(this::toDTO)
                 .orElseThrow(() -> new NotFoundException("Customer not found for phone: " + phone));
     }
+
+    @Override
+    public CustomerDTO updateEmail(int id, String email) {
+        Customer c = get(id);
+        c.setEmail(email);
+        return toDTO(repo.save(c));
+    }
+
+    @Override
+    public java.util.List<CustomerDTO> findInactiveCustomers() {
+        return repo.findByActiveFalse()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public java.util.List<CustomerDTO> findByFirstName(String firstName) {
+        return repo.findByFirstNameIgnoreCase(firstName)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
 }

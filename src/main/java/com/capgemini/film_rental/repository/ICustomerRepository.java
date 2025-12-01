@@ -18,4 +18,7 @@ public interface ICustomerRepository extends JpaRepository<Customer,Integer>{
     List<Customer> findByCountry(@Param("country") String country);
 
     List<Customer> findByEmailIgnoreCase(String email);
+
+    java.util.List<Customer> findByActiveFalse();
+    java.util.List<Customer> findByFirstNameIgnoreCase(String firstName);
 }

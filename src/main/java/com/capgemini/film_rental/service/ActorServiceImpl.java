@@ -39,4 +39,11 @@ public class ActorServiceImpl implements IActorService{
                 .map(Film::getFilmId)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Actor updateFirstName(int actorId, String firstName) {
+        Actor actor = getActorById(actorId);
+        actor.setFirstName(firstName);
+        return actorRepository.save(actor);
+    }
 }

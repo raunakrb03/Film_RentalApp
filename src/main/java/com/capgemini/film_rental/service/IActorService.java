@@ -14,4 +14,5 @@ public interface IActorService {
     Actor updateFirstName(int actorId, String firstName);
     List<ActorWithFilmCountDTO> findTop10ByFilmCount();
    // public Actor updateActorByFirstName(Actor actor);
+   List<Actor> findByFirstName(String firstName);
 }

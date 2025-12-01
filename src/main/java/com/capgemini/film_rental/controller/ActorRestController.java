@@ -30,4 +30,13 @@ public class ActorRestController {
     public ResponseEntity<List<ActorWithFilmCountDTO>> getTop10ByFilmCount() {
         return ResponseEntity.ok(actorService.findTop10ByFilmCount());
     }
+
+    @GetMapping("/firstname/{fn}")
+    public ResponseEntity<List<ActorDTO>> getActorsByFirstName(@PathVariable String fn) {
+        var actors = actorService.findByFirstName(fn);
+        return ResponseEntity.ok(actors.stream()
+                .map(ActorMapper::toDTO)
+                .toList());
+    }
+
 }

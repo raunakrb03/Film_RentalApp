@@ -67,6 +67,12 @@ public class FilmRestController {
     }
 
 
+    @GetMapping("/length/lt/{length}")
+    public ResponseEntity<List<FilmDTO>> getFilmsWithLengthLessThan(@PathVariable short length) {
+        return ResponseEntity.ok(service.findByLengthLessThan(length));
+    }
+
+
     @GetMapping("/countbyyear")
     public Map<Integer, Long> countFilmsByYear() {
         return service.countFilmsByYear();

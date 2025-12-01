@@ -167,4 +167,16 @@ public class FilmServiceImpl implements IFilmService {
                 .filter(f -> f.getReleaseYear() != null)
                 .collect(Collectors.groupingBy(Film::getReleaseYear, Collectors.counting()));
     }
+
+
+    @Override
+    public List<FilmDTO> findByLengthLessThan(short length) {
+        return filmRepo.findByLengthLessThan(length)
+                .stream()
+                .map(FilmMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
 }

@@ -16,7 +16,6 @@ import java.util.Map;
 @RequestMapping("/api/films")
 @SuppressWarnings("unused")
 public class FilmRestController {
-
     private final IFilmService service;
 
     public FilmRestController(IFilmService service) {

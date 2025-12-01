@@ -59,4 +59,10 @@ public class ActorServiceImpl implements IActorService{
             ((Number) row.get("filmCount")).longValue()
         )).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Actor> findByFirstName(String firstName) {
+        return actorRepository.findByFirstNameContainingIgnoreCase(firstName);
+    }
+
 }

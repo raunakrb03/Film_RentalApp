@@ -154,5 +154,16 @@ public class PaymentServiceImpl implements IPaymentService {
             // Wrap any unexpected exceptions
             throw new RuntimeException("Error calculating cumulative revenue for all stores datewise", e);
         }
+        return repo.revenueAllStoresDatewise().stream()
+                .map(arr -> new StoreRevenueByDateDTO(((Number) arr[0]).intValue(), ((java.sql.Date) arr[1]).toLocalDate(), (BigDecimal) arr[2]))
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<StoreRevenueByDateDTO> cumulativeRevenueByDateForStore(int storeId) {
+        return repo.revenueByDateForStore(storeId).stream()
+                .map(arr -> new StoreRevenueByDateDTO(storeId, ((java.sql.Date) arr[0]).toLocalDate(), (BigDecimal) arr[1]))
+                .collect(Collectors.toList());
     }
 }

@@ -3,6 +3,7 @@ package com.capgemini.film_rental.controller;
 import com.capgemini.film_rental.dto.ActorCreateDTO;
 import com.capgemini.film_rental.dto.ActorDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
+import com.capgemini.film_rental.dto.ActorWithFilmCountDTO;
 import com.capgemini.film_rental.mapper.ActorMapper;
 import com.capgemini.film_rental.service.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,7 @@ public class ActorRestController {
         return ResponseEntity.ok(actorService.filmsOfActor(actorId));
     }
 
+    // ...existing code...
     @PutMapping("/update/firstname/{id}")
     public ResponseEntity<ActorDTO> updateFirstName(@PathVariable int id, @RequestParam String firstName) {
         var updated = actorService.updateFirstName(id, firstName);
@@ -77,4 +79,17 @@ public class ActorRestController {
     public ResponseEntity<List<ActorDTO>> getActorsByLastName(@PathVariable String ln) {
         return ResponseEntity.ok(actorService.getActorsByLastName(ln));
     }
+    @GetMapping("/toptenbyfilmcount")
+    public ResponseEntity<List<ActorWithFilmCountDTO>> getTop10ByFilmCount() {
+        return ResponseEntity.ok(actorService.findTop10ByFilmCount());
+    }
+
+    @GetMapping("/firstname/{fn}")
+    public ResponseEntity<List<ActorDTO>> getActorsByFirstName(@PathVariable String fn) {
+        var actors = actorService.findByFirstName(fn);
+        return ResponseEntity.ok(actors.stream()
+                .map(ActorMapper::toDTO)
+                .toList());
+    }
+
 }

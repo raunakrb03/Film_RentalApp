@@ -13,9 +13,15 @@ public interface IStoreService {
 
     StoreDTO assignAddress(int storeId, int addressId);
 
+    StoreDTO updatePhone(int storeId, String phone);
+
+    List<StoreDTO> findByCountry(String country);
+
     List<StoreDTO.ManagerAndStoreView> managersOverview();
 
     StoreDTO assignManager(int storeId, int managerStaffId);
 
     StoreDTO findByPhone(String phone);
+    List<Integer> staffIds(int storeId);
+    StoreDTO createStore(StoreDTO dto);
 }

@@ -1,5 +1,7 @@
 package com.capgemini.film_rental.controller;
 
+import com.capgemini.film_rental.dto.FilmInventoryCountDTO;
+import com.capgemini.film_rental.dto.InventoryAddDTO;
 import com.capgemini.film_rental.dto.aggregates.FilmInventoryByStoreDTO;
 import com.capgemini.film_rental.dto.aggregates.StoreInventoryDTO;
 import com.capgemini.film_rental.service.IInventoryService;
@@ -10,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryRestController {
-
 
     private final IInventoryService service;
 
@@ -27,4 +28,19 @@ public class InventoryRestController {
     public List<StoreInventoryDTO> inventoryByStore(@PathVariable("id") int storeId) {
         return service.inventoryByStore(storeId);
     }
+    @PostMapping("/add")
+    public String addFilmToStore(@RequestBody InventoryAddDTO dto) {
+        return service.addFilmToStore(dto);
+    }
+
+    @GetMapping("/films")
+    public List<FilmInventoryCountDTO> getAllFilmsInventory() {
+        return service.getAllFilmsInventoryCounts();
+    }
+
+    @GetMapping("/film/{id}")
+    public List<FilmInventoryByStoreDTO> inventoryOfFilmAcrossStores(@PathVariable int id) {
+        return service.inventoryOfFilmAcrossStores(id);
+    }
+
 }

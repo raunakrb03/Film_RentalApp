@@ -3,6 +3,7 @@ package com.capgemini.film_rental.service;
 
 import com.capgemini.film_rental.dto.ActorDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
+import com.capgemini.film_rental.dto.ActorWithFilmCountDTO;
 import com.capgemini.film_rental.entity.Actor;
 import com.capgemini.film_rental.entity.Film;
 import com.capgemini.film_rental.mapper.ActorMapper;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +40,6 @@ public class ActorServiceImpl implements IActorService{
     public List<Actor> getAllActors() {
         return actorRepository.findAll();
     }
-
 
     @Override
     public java.util.List<Integer> filmsOfActor(int actorId){
@@ -83,4 +84,19 @@ public class ActorServiceImpl implements IActorService{
 
         return actorRepository.save(actor);
     }
+    public List<ActorWithFilmCountDTO> findTop10ByFilmCount() {
+        List<Map<String, Object>> results = actorRepository.findTop10ByFilmCount();
+        return results.stream().map(row -> new ActorWithFilmCountDTO(
+            ((Number) row.get("actorId")).intValue(),
+            (String) row.get("firstName"),
+            (String) row.get("lastName"),
+            ((Number) row.get("filmCount")).longValue()
+        )).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Actor> findByFirstName(String firstName) {
+        return actorRepository.findByFirstNameContainingIgnoreCase(firstName);
+    }
+
 }

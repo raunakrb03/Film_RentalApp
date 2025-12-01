@@ -14,4 +14,6 @@ public interface IPaymentService {
     List<FilmRevenueDTO> cumulativeRevenueOfAllFilmsAcrossStores();
 
     List<StoreRevenueByDateDTO> cumulativeRevenueAllStoresDatewise();
+
+    List<StoreRevenueByDateDTO> cumulativeRevenueByDateForStore(int storeId);
 }

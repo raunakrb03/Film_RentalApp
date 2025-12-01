@@ -33,6 +33,11 @@ public class StoreRestController {
         return service.findByCity(city);
     }
 
+    @GetMapping("/country/{country}")
+    public List<StoreDTO> byCountry(@PathVariable String country) {
+        return service.findByCountry(country);
+    }
+
     @PutMapping("/{storeId}/address/{addressId}")
     public StoreDTO assignAddress(@PathVariable int storeId, @PathVariable int addressId) {
         return service.assignAddress(storeId, addressId);
@@ -41,6 +46,9 @@ public class StoreRestController {
     @PutMapping("/{storeId}/manager/{manager_staff_id}")
     public StoreDTO assignManager(@PathVariable int storeId, @PathVariable(name = "manager_staff_id") int managerStaffId) {
         return service.assignManager(storeId, managerStaffId);
+    @PutMapping("/update/{storeId}/{phone}")
+    public StoreDTO updatePhone(@PathVariable int storeId, @PathVariable String phone) {
+        return service.updatePhone(storeId, phone);
     }
 
     @GetMapping("/managers")
@@ -52,4 +60,15 @@ public class StoreRestController {
     public StoreDTO byPhone(@PathVariable String phone) {
         return service.findByPhone(phone);
     }
+    @GetMapping("/staff/{storeId}")
+    public List<Integer> staffIds(@PathVariable int storeId) {
+        return service.staffIds(storeId);
+    }
+
+    @PostMapping("/post")
+    public StoreDTO createStore(@RequestBody StoreDTO dto) {
+        return service.createStore(dto);
+    }
+
+
 }

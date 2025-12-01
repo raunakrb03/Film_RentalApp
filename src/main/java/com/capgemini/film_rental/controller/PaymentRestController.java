@@ -36,6 +36,12 @@ public class PaymentRestController {
         return service.cumulativeRevenueAllStoresDatewise();
     }
 
+
+    @GetMapping("/revenue/datewise/store/{id}")
+    public List<StoreRevenueByDateDTO> revenueByDateForStore(@PathVariable int id) {
+        return service.cumulativeRevenueByDateForStore(id);
+    }
+
     @GetMapping("/revenue/filmwise")
     public List<FilmRevenueDTO> revenueAllFilmsAcrossStores() {
         return service.cumulativeRevenueOfAllFilmsAcrossStores();

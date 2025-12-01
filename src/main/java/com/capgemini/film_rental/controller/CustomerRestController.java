@@ -38,6 +38,11 @@ public class CustomerRestController {
         return service.findByCity(city);
     }
 
+    @GetMapping("/country/{country}")
+    public List<CustomerDTO> byCountry(@PathVariable String country) {
+        return service.findByCountry(country);
+    }
+
     @PutMapping("/{id}/{addressId}")
     public CustomerDTO assignAddress(@PathVariable int id, @PathVariable int addressId) {
         return service.assignAddress(id, addressId);

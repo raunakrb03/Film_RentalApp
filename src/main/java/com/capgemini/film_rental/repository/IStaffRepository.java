@@ -19,4 +19,7 @@ public interface IStaffRepository extends JpaRepository<Staff,Integer> {
 
     @Query("select s from Staff s where lower(s.lastName) like lower(concat('%',:ln,'%'))")
     List<Staff> findByLastNameContainingIgnoreCase(@Param("ln") String ln);
+
+    @Query("select s from Staff s where lower(s.email) = lower(:email)")
+    List<Staff> findByEmail(@Param("email") String email);
 }

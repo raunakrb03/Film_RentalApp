@@ -14,5 +14,8 @@ public interface ICustomerRepository extends JpaRepository<Customer,Integer>{
     @Query("select c from Customer c where lower(c.address.city.city) = lower(:city)")
     List<Customer> findByCity(@Param("city") String city);
 
+    @Query("select c from Customer c where lower(c.address.city.country.country) = lower(:country)")
+    List<Customer> findByCountry(@Param("country") String country);
+
     List<Customer> findByEmailIgnoreCase(String email);
 }

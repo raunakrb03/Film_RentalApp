@@ -11,6 +11,8 @@ public interface ICustomerService {
 
     java.util.List<CustomerDTO> findByCity(String city);
 
+    java.util.List<CustomerDTO> findByCountry(String country);
+
     CustomerDTO assignAddress(int id, int addressId);
 
     java.util.List<CustomerDTO> findByEmail(String email);

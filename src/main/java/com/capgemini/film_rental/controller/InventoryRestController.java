@@ -32,4 +32,10 @@ public class InventoryRestController {
     public List<FilmInventoryCountDTO> getAllFilmsInventory() {
         return service.getAllFilmsInventoryCounts();
     }
+
+    @GetMapping("/film/{id}")
+    public List<FilmInventoryByStoreDTO> inventoryOfFilmAcrossStores(@PathVariable int id) {
+        return service.inventoryOfFilmAcrossStores(id);
+    }
+
 }

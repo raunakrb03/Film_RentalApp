@@ -12,4 +12,5 @@ public interface IInventoryService {
     String addFilmToStore(InventoryAddDTO dto);
 
     List<FilmInventoryCountDTO> getAllFilmsInventoryCounts();
+    List<FilmInventoryByStoreDTO> inventoryOfFilmAcrossStores(int filmId);
 }

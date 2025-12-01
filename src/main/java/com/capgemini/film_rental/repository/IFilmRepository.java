@@ -21,4 +21,5 @@ public interface IFilmRepository extends JpaRepository<Film, Integer> {
     List<Film> findByRentalRateGreaterThan(@Param("rate") BigDecimal rate);
 
     List<Film> findByRatingLessThan(Rating rating);
+    List<Film> findByRatingGreaterThan(Rating rating);
 }

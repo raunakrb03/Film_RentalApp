@@ -60,6 +60,11 @@ public class FilmRestController {
         return ResponseEntity.ok(updated);
     }
 
+    @PutMapping("/update/rentaldurtion/{id}")
+    public FilmDTO updateRentalDuration(@PathVariable int id, @RequestParam int rentalDuration) {
+        return service.updateRentalDuration(id, rentalDuration);
+    }
+
     @PostMapping("/{id}/actor/{actorId}")
     public ResponseEntity<FilmDTO> addActor(@PathVariable int id, @PathVariable int actorId) {
         FilmDTO updated = service.addActor(id, actorId);
@@ -86,6 +91,11 @@ public class FilmRestController {
     @GetMapping("/rating/lt/{rating}")
     public List<FilmDTO> ratingLT(@PathVariable String rating) {
         return service.findByRatingLessThan(rating);
+    }
+
+    @GetMapping("/rating/gt/{rating}")
+    public List<FilmDTO> ratingGT(@PathVariable String rating) {
+        return service.findByRatingGreaterThan(rating);
     }
 
     @GetMapping("/betweenyear/{from}/{to}")

@@ -113,6 +113,13 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    public FilmDTO updateRentalDuration(int filmId, int rentalDuration) {
+        Film f = getFilm(filmId);
+        f.setRentalDuration(rentalDuration);
+        return FilmMapper.toDTO(filmRepo.save(f));
+    }
+
+    @Override
     public List<FilmDTO> findByCategory(String category) {
         return filmRepo.findByCategoryName(category).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
     }
@@ -126,6 +133,12 @@ public class FilmServiceImpl implements IFilmService {
     public List<FilmDTO> findByRatingLessThan(String rating) {
         Rating r = Rating.valueOf(rating.replace("-", "_"));
         return filmRepo.findByRatingLessThan(r).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FilmDTO> findByRatingGreaterThan(String rating) {
+        Rating r = Rating.valueOf(rating.replace("-", "_"));
+        return filmRepo.findByRatingGreaterThan(r).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override

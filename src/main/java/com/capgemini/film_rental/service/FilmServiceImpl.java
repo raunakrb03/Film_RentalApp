@@ -177,6 +177,15 @@ public class FilmServiceImpl implements IFilmService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<FilmDTO> findByRentalDurationGreaterThan(byte rd) {
+        return filmRepo.findByRentalDurationGreaterThan(rd)
+                .stream()
+                .map(FilmMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
 
 
 }

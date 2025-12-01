@@ -78,6 +78,12 @@ public class FilmRestController {
         return service.countFilmsByYear();
     }
 
+    @GetMapping("/duration/gt/{rd}")
+    public ResponseEntity<List<FilmDTO>> getFilmsWithRentalDurationGreaterThan(@PathVariable byte rd) {
+        return ResponseEntity.ok(service.findByRentalDurationGreaterThan(rd));
+    }
+
+
     @GetMapping("/category/{category}")
     public List<FilmDTO> byCategory(@PathVariable String category) {
         return service.findByCategory(category);

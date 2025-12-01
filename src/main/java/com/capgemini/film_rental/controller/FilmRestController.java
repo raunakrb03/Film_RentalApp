@@ -72,10 +72,6 @@ public class FilmRestController {
     }
 
 
-    @GetMapping("/countbyyear")
-    public Map<Integer, Long> countFilmsByYear() {
-        return service.countFilmsByYear();
-    }
 
     @GetMapping("/category/{category}")
     public List<FilmDTO> byCategory(@PathVariable String category) {

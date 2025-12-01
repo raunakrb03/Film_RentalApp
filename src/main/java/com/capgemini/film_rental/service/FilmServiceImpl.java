@@ -199,6 +199,11 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    public List<FilmDTO> findByRentalRateLessThan(BigDecimal rate) {
+        return filmRepo.findByRentalRateLessThan(rate).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public List<FilmDTO> findByRentalDurationLessThan(int rentalDuration) {
         return filmRepo.findByRentalDurationLessThan(rentalDuration).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
     }
@@ -208,5 +213,21 @@ public class FilmServiceImpl implements IFilmService {
         return filmRepo.findByTitle(title).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
     }
 
+    @Override
+    public FilmDTO updateRentalRate(int filmId, BigDecimal rentalRate) {
+        Film f = getFilm(filmId);
+        f.setRentalRate(rentalRate);
+        return FilmMapper.toDTO(filmRepo.save(f));
+    }
+
+    @Override
+    public List<FilmDTO> findByLanguage(String languageName) {
+        return filmRepo.findByLanguageName(languageName).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FilmDTO> findByReleaseYear(Integer year) {
+        return filmRepo.findByReleaseYear(year).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
+    }
 
 }

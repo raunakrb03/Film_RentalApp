@@ -36,6 +36,8 @@ public interface IFilmService {
 
     List<FilmDTO> findByRentalRateGreaterThan(java.math.BigDecimal rate);
 
+    List<FilmDTO> findByRentalRateLessThan(java.math.BigDecimal rate);
+
     List<FilmDTO> findByRentalDurationLessThan(int rentalDuration);
 
     List<FilmDTO> findByTitle(String title);
@@ -47,5 +49,11 @@ public interface IFilmService {
     List<FilmDTO> findByLengthLessThan(short length);
 
     List<FilmDTO> findByRentalDurationGreaterThan(byte rd);
+
+    FilmDTO updateRentalRate(int filmId, java.math.BigDecimal rentalRate);
+
+    List<FilmDTO> findByLanguage(String languageName);
+
+    List<FilmDTO> findByReleaseYear(Integer year);
 
 }

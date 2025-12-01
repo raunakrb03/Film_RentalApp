@@ -65,6 +65,11 @@ public class FilmRestController {
         return service.updateRentalDuration(id, rentalDuration);
     }
 
+    @PutMapping("/update/rentalrate/{id}")
+    public FilmDTO updateRentalRate(@PathVariable int id, @RequestParam BigDecimal rentalRate) {
+        return service.updateRentalRate(id, rentalRate);
+    }
+
     @PostMapping("/{id}/actor/{actorId}")
     public ResponseEntity<FilmDTO> addActor(@PathVariable int id, @PathVariable int actorId) {
         FilmDTO updated = service.addActor(id, actorId);
@@ -126,6 +131,11 @@ public class FilmRestController {
         return service.findByRentalRateGreaterThan(rate);
     }
 
+    @GetMapping("/rate/lt/{rate}")
+    public List<FilmDTO> rateLT(@PathVariable BigDecimal rate) {
+        return service.findByRentalRateLessThan(rate);
+    }
+
     @GetMapping("/duration/lt/{rd}")
     public List<FilmDTO> durationLT(@PathVariable int rd) {
         return service.findByRentalDurationLessThan(rd);
@@ -135,4 +145,15 @@ public class FilmRestController {
     public List<FilmDTO> findByTitle(@PathVariable String title) {
         return service.findByTitle(title);
     }
+
+    @GetMapping("/language/{lang}")
+    public List<FilmDTO> findByLanguage(@PathVariable String lang) {
+        return service.findByLanguage(lang);
+    }
+
+    @GetMapping("/year/{year}")
+    public List<FilmDTO> findByReleaseYear(@PathVariable Integer year) {
+        return service.findByReleaseYear(year);
+    }
+
 }

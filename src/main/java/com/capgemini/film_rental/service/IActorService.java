@@ -11,5 +11,6 @@ public interface IActorService {
     public List<Actor> getAllActors();
     List<Integer> filmsOfActor(int actorId);
     Actor updateFirstName(int actorId, String firstName);
+    Actor assignFilmToActor(int actorId, int filmId);
    // public Actor updateActorByFirstName(Actor actor);
 }

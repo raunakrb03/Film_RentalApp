@@ -78,6 +78,20 @@ public class StoreServiceImpl implements IStoreService {
     }
 
     @Override
+    public StoreDTO updatePhone(int storeId, String phone) {
+        Store s = get(storeId);
+        Address a = s.getAddress();
+        if (a == null) throw new NotFoundException("Store has no address");
+        a.setPhone(phone);
+        addressRepo.save(a);
+        StoreDTO d = new StoreDTO();
+        d.setStoreId(s.getStoreId());
+        d.setManagerStaffId(s.getManagerStaff() != null ? s.getManagerStaff().getStaffId() : null);
+        d.setAddressId(s.getAddress() != null ? s.getAddress().getAddressId() : null);
+        return d;
+    }
+
+    @Override
     public List<StoreDTO.ManagerAndStoreView> managersOverview() {
         return repo.findAll().stream().map(s -> {
             StoreDTO.ManagerAndStoreView v = new StoreDTO.ManagerAndStoreView();
@@ -92,6 +106,17 @@ public class StoreServiceImpl implements IStoreService {
             v.storeCity = s.getAddress() != null && s.getAddress().getCity() != null ? s.getAddress().getCity().getCity() : null;
             v.storePhone = s.getAddress() != null ? s.getAddress().getPhone() : null;
             return v;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StoreDTO> findByCountry(String country) {
+        return repo.findByCountry(country).stream().map(s -> {
+            StoreDTO d = new StoreDTO();
+            d.setStoreId(s.getStoreId());
+            d.setManagerStaffId(s.getManagerStaff() != null ? s.getManagerStaff().getStaffId() : null);
+            d.setAddressId(s.getAddress() != null ? s.getAddress().getAddressId() : null);
+            return d;
         }).collect(Collectors.toList());
     }
 }

@@ -33,9 +33,19 @@ public class StoreRestController {
         return service.findByCity(city);
     }
 
+    @GetMapping("/country/{country}")
+    public List<StoreDTO> byCountry(@PathVariable String country) {
+        return service.findByCountry(country);
+    }
+
     @PutMapping("/{storeId}/address/{addressId}")
     public StoreDTO assignAddress(@PathVariable int storeId, @PathVariable int addressId) {
         return service.assignAddress(storeId, addressId);
+    }
+
+    @PutMapping("/update/{storeId}/{phone}")
+    public StoreDTO updatePhone(@PathVariable int storeId, @PathVariable String phone) {
+        return service.updatePhone(storeId, phone);
     }
 
     @GetMapping("/managers")

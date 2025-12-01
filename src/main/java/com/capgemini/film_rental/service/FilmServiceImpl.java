@@ -5,6 +5,7 @@ import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.entity.Category;
 import com.capgemini.film_rental.entity.Film;
 import com.capgemini.film_rental.entity.Language;
+import com.capgemini.film_rental.entity.Actor;
 import com.capgemini.film_rental.entity.enums.Rating;
 import com.capgemini.film_rental.exception.NotFoundException;
 import com.capgemini.film_rental.mapper.FilmMapper;
@@ -28,11 +29,13 @@ public class FilmServiceImpl implements IFilmService {
     private final IFilmRepository filmRepo;
     private final ICategoryRepository categoryRepo;
     private final ILanguageRepository languageRepo;
+    private final IActorRepository actorRepo;
 
-    public FilmServiceImpl(IFilmRepository filmRepo, ICategoryRepository categoryRepo, ILanguageRepository languageRepo) {
+    public FilmServiceImpl(IFilmRepository filmRepo, ICategoryRepository categoryRepo, ILanguageRepository languageRepo, IActorRepository actorRepo) {
         this.filmRepo = filmRepo;
         this.categoryRepo = categoryRepo;
         this.languageRepo = languageRepo;
+        this.actorRepo = actorRepo;
     }
 
     private Film getFilm(int id) {
@@ -53,8 +56,11 @@ public class FilmServiceImpl implements IFilmService {
             f.setCategories(categoryRepo.findAllById(dto.getCategoryIds()));
         }
         if (dto.getActorIds() != null && !dto.getActorIds().isEmpty()) {
-            // actors relationship will be handled by existing actor ids; if actors not present it's okay
-            // leave actors empty here as not needed for the endpoints beyond read
+            // resolve actor ids into managed entities and attach to film
+            dto.getActorIds().forEach(id -> {
+                var actor = actorRepo.findById(id).orElseThrow(() -> new NotFoundException("Actor not found: " + id));
+                f.addActor(actor);
+            });
         }
         if (dto.getRentalRate() != null) f.setRentalRate(dto.getRentalRate());
         if (dto.getLength() != null) f.setLength(dto.getLength());
@@ -63,6 +69,15 @@ public class FilmServiceImpl implements IFilmService {
         // log id and return it so caller can verify where the record was persisted
         logger.info("Saved Film with id={} title={}", saved.getFilmId(), saved.getTitle());
         return "Record Created Successfully id=" + saved.getFilmId();
+    }
+
+    @Override
+    public FilmDTO addActorToFilm(int filmId, int actorId) {
+        Film film = getFilm(filmId);
+        Actor actor = actorRepo.findById(actorId).orElseThrow(() -> new NotFoundException("Actor not found: " + actorId));
+        film.addActor(actor); // update owning side
+        Film saved = filmRepo.saveAndFlush(film);
+        return FilmMapper.toDTO(saved);
     }
 
     @Override

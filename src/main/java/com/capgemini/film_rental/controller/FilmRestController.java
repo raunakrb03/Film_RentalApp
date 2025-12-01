@@ -112,4 +112,14 @@ public class FilmRestController {
     public List<FilmDTO> rateGT(@PathVariable BigDecimal rate) {
         return service.findByRentalRateGreaterThan(rate);
     }
+
+    @GetMapping("/duration/lt/{rd}")
+    public List<FilmDTO> durationLT(@PathVariable int rd) {
+        return service.findByRentalDurationLessThan(rd);
+    }
+
+    @GetMapping("/title/{title}")
+    public List<FilmDTO> findByTitle(@PathVariable String title) {
+        return service.findByTitle(title);
+    }
 }

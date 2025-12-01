@@ -157,6 +157,16 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    public List<FilmDTO> findByRentalDurationLessThan(int rentalDuration) {
+        return filmRepo.findByRentalDurationLessThan(rentalDuration).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FilmDTO> findByTitle(String title) {
+        return filmRepo.findByTitle(title).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public FilmDTO addActor(int filmId, int actorId) {
         Film f = getFilm(filmId);
         Actor a = actorRepo.findById(actorId).orElseThrow(() -> new NotFoundException("Actor not found"));

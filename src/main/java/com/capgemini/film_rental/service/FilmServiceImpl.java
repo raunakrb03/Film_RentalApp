@@ -5,6 +5,7 @@ import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.entity.Category;
 import com.capgemini.film_rental.entity.Film;
 import com.capgemini.film_rental.entity.Language;
+import com.capgemini.film_rental.entity.Actor;
 import com.capgemini.film_rental.entity.enums.Rating;
 import com.capgemini.film_rental.exception.NotFoundException;
 import com.capgemini.film_rental.mapper.FilmMapper;
@@ -28,11 +29,13 @@ public class FilmServiceImpl implements IFilmService {
     private final IFilmRepository filmRepo;
     private final ICategoryRepository categoryRepo;
     private final ILanguageRepository languageRepo;
+    private final IActorRepository actorRepo;
 
-    public FilmServiceImpl(IFilmRepository filmRepo, ICategoryRepository categoryRepo, ILanguageRepository languageRepo) {
+    public FilmServiceImpl(IFilmRepository filmRepo, ICategoryRepository categoryRepo, ILanguageRepository languageRepo, IActorRepository actorRepo) {
         this.filmRepo = filmRepo;
         this.categoryRepo = categoryRepo;
         this.languageRepo = languageRepo;
+        this.actorRepo = actorRepo;
     }
 
     private Film getFilm(int id) {
@@ -53,8 +56,10 @@ public class FilmServiceImpl implements IFilmService {
             f.setCategories(categoryRepo.findAllById(dto.getCategoryIds()));
         }
         if (dto.getActorIds() != null && !dto.getActorIds().isEmpty()) {
-            // actors relationship will be handled by existing actor ids; if actors not present it's okay
-            // leave actors empty here as not needed for the endpoints beyond read
+            // If actor IDs were provided, fetch those actors and attach them to the new Film.
+            // We intentionally accept the subset returned by the repository (missing IDs are ignored).
+            List<Actor> actors = actorRepo.findAllById(dto.getActorIds());
+            f.setActors(actors);
         }
         if (dto.getRentalRate() != null) f.setRentalRate(dto.getRentalRate());
         if (dto.getLength() != null) f.setLength(dto.getLength());
@@ -100,13 +105,33 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    public FilmDTO updateRating(int filmId, String rating) {
+        Film f = getFilm(filmId);
+        Rating r = Rating.valueOf(rating.replace("-", "_"));
+        f.setRating(r);
+        return FilmMapper.toDTO(filmRepo.save(f));
+    }
+
+    @Override
+    public FilmDTO addActor(int filmId, int actorId) {
+        Film f = getFilm(filmId);
+        Actor a = actorRepo.findById(actorId).orElseThrow(() -> new NotFoundException("Actor not found"));
+        var list = Optional.ofNullable(f.getActors()).orElseGet(java.util.ArrayList::new);
+        if (!list.contains(a)) {
+            list.add(a);
+            f.setActors(list);
+        }
+        return FilmMapper.toDTO(filmRepo.save(f));
+    }
+
+    @Override
     public List<FilmDTO> findByCategory(String category) {
         return filmRepo.findByCategoryName(category).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public List<Integer> findActorsOfFilm(int filmId) {
-        return getFilm(filmId).getActors().stream().map(a -> a.getActorId()).collect(Collectors.toList());
+        return getFilm(filmId).getActors().stream().map(Actor::getActorId).collect(Collectors.toList());
     }
 
     @Override

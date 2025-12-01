@@ -1,9 +1,14 @@
 // src/main/java/com/capgemini/film_rental/service/ActorServiceImpl.java
 package com.capgemini.film_rental.service;
 
+import com.capgemini.film_rental.dto.ActorDTO;
+import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.entity.Actor;
 import com.capgemini.film_rental.entity.Film;
+import com.capgemini.film_rental.mapper.ActorMapper;
+import com.capgemini.film_rental.mapper.FilmMapper;
 import com.capgemini.film_rental.repository.IActorRepository;
+import com.capgemini.film_rental.repository.IFilmRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +20,9 @@ import java.util.stream.Collectors;
 public class ActorServiceImpl implements IActorService{
     @Autowired
     IActorRepository actorRepository;
+
+    @Autowired
+    IFilmRepository filmRepository;
     @Override
     public Actor registerActor(Actor actor) {
         return actorRepository.save(actor);
@@ -41,9 +49,38 @@ public class ActorServiceImpl implements IActorService{
     }
 
     @Override
+    public List<FilmDTO> getActorFilmsAsDTO(int actorId) {
+        Actor actor = getActorById(actorId);
+        return actor.getFilms().stream()
+                .map(FilmMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ActorDTO> getActorsByLastName(String lastName) {
+        return actorRepository.findByLastNameIgnoreCase(lastName).stream()
+                .map(ActorMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Actor updateFirstName(int actorId, String firstName) {
         Actor actor = getActorById(actorId);
         actor.setFirstName(firstName);
+        return actorRepository.save(actor);
+    }
+
+    @Override
+    public Actor assignFilmToActor(int actorId, int filmId) {
+        Actor actor = getActorById(actorId);
+        Film film = filmRepository.findById(filmId)
+                .orElseThrow(() -> new EntityNotFoundException("Film does not exist with ID: " + filmId));
+
+        // Add film to actor's film list if not already present
+        if (!actor.getFilms().contains(film)) {
+            actor.getFilms().add(film);
+        }
+
         return actorRepository.save(actor);
     }
 }

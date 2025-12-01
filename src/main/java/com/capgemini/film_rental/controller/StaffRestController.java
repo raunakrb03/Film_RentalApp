@@ -38,6 +38,11 @@ public class StaffRestController {
         return service.updateEmail(id, email);
     }
 
+    @PutMapping("/update/store/{id}")
+    public StaffDTO assignStore(@PathVariable int id, @RequestParam int storeId) {
+        return service.assignStore(id, storeId);
+    }
+
     @GetMapping("/phone/{phone}")
     public List<StaffDTO> byPhone(@PathVariable String phone) {
         return service.findByPhone(phone);

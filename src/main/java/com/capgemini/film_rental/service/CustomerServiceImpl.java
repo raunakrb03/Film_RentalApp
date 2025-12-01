@@ -127,6 +127,13 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    public CustomerDTO updateLastName(int id, String lastName) {
+        Customer c = get(id);
+        c.setLastName(lastName);
+        return toDTO(repo.save(c));
+    }
+
+    @Override
     public CustomerDTO getCustomerByNumber(String phone) {
         return repo.findByPhone(phone).stream().findFirst().map(this::toDTO)
                 .orElseThrow(() -> new NotFoundException("Customer not found for phone: " + phone));
@@ -148,6 +155,14 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    public java.util.List<CustomerDTO> findActiveCustomers() {
+        return repo.findByActiveTrue()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public java.util.List<CustomerDTO> findByFirstName(String firstName) {
         return repo.findByFirstNameIgnoreCase(firstName)
                 .stream()
@@ -155,5 +170,12 @@ public class CustomerServiceImpl implements ICustomerService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public java.util.List<CustomerDTO> findByLastName(String lastName) {
+        return repo.findByLastNameIgnoreCase(lastName)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
 
 }

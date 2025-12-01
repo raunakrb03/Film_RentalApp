@@ -2,14 +2,18 @@ package com.capgemini.film_rental.controller;
 
 import com.capgemini.film_rental.dto.ActorCreateDTO;
 import com.capgemini.film_rental.dto.ActorDTO;
+import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.mapper.ActorMapper;
 import com.capgemini.film_rental.service.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/actors")
@@ -27,6 +31,24 @@ public class ActorRestController {
       var saved = actorService.registerActor(ActorMapper.toEntity(actor));
       return ResponseEntity.ok(ActorMapper.toDTO(saved));
     }
+
+    @PostMapping("/post")
+    public ResponseEntity<Map<String, String>> addNewActor(@Valid @RequestBody ActorCreateDTO actor) {
+        try {
+            var saved = actorService.registerActor(ActorMapper.toEntity(actor));
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Record Created Successfully");
+            response.put("actorId", String.valueOf(saved.getActorId()));
+            response.put("firstName", saved.getFirstName());
+            response.put("lastName", saved.getLastName());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception ex) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to create actor: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<ActorDTO>> getAll(){
         return ResponseEntity.ok(actorService.getAllActors().stream().map(ActorMapper::toDTO).toList());
@@ -45,8 +67,14 @@ public class ActorRestController {
     }
 
     @PutMapping("/{id}/film")
-    public ResponseEntity<ActorDTO> assignFilmToActor(@PathVariable int id, @RequestParam int filmId) {
-        var updated = actorService.assignFilmToActor(id, filmId);
-        return ResponseEntity.ok(ActorMapper.toDTO(updated));
+    public ResponseEntity<List<FilmDTO>> assignFilmToActor(@PathVariable int id, @RequestParam int filmId) {
+        actorService.assignFilmToActor(id, filmId);
+        List<FilmDTO> films = actorService.getActorFilmsAsDTO(id);
+        return ResponseEntity.ok(films);
+    }
+
+    @GetMapping("/lastname/{ln}")
+    public ResponseEntity<List<ActorDTO>> getActorsByLastName(@PathVariable String ln) {
+        return ResponseEntity.ok(actorService.getActorsByLastName(ln));
     }
 }

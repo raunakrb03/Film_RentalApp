@@ -94,4 +94,70 @@ public class StoreServiceImpl implements IStoreService {
             return v;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public StoreDTO assignManager(int storeId, int managerStaffId) {
+        // Validate storeId
+        if (storeId <= 0) {
+            throw new IllegalArgumentException("Store ID must be greater than 0");
+        }
+
+        // Validate managerStaffId
+        if (managerStaffId <= 0) {
+            throw new IllegalArgumentException("Manager Staff ID must be greater than 0");
+        }
+
+        // Get the store
+        Store store = get(storeId);
+
+        // Get the staff member
+        Staff manager = staffRepo.findById(managerStaffId)
+                .orElseThrow(() -> new NotFoundException("Staff member not found with ID: " + managerStaffId));
+
+        // Check if staff member is active
+        if (manager.getActive() == 0) {
+            throw new IllegalArgumentException("Cannot assign an inactive staff member as manager");
+        }
+
+        // Verify that the staff member works at the same store
+        if (manager.getStore().getStoreId() != storeId) {
+            throw new IllegalArgumentException("Staff member does not work at this store");
+        }
+
+        // Assign the manager to the store
+        store.setManagerStaff(manager);
+        store = repo.save(store);
+
+        // Build and return the response DTO
+        StoreDTO dto = new StoreDTO();
+        dto.setStoreId(store.getStoreId());
+        dto.setManagerStaffId(store.getManagerStaff() != null ? store.getManagerStaff().getStaffId() : null);
+        dto.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
+        return dto;
+    }
+
+    @Override
+    public StoreDTO findByPhone(String phone) {
+        // Validate phone parameter
+        if (phone == null || phone.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number cannot be null or empty");
+        }
+
+        // Search for store by phone
+        List<Store> stores = repo.findByAddress_Phone(phone);
+
+        if (stores == null || stores.isEmpty()) {
+            throw new NotFoundException("Store not found with phone: " + phone);
+        }
+
+        // Get the first store found
+        Store store = stores.get(0);
+
+        // Build and return the response DTO with address information
+        StoreDTO dto = new StoreDTO();
+        dto.setStoreId(store.getStoreId());
+        dto.setManagerStaffId(store.getManagerStaff() != null ? store.getManagerStaff().getStaffId() : null);
+        dto.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
+        return dto;
+    }
 }

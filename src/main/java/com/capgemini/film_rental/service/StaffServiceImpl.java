@@ -84,6 +84,23 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public StaffDTO assignStore(int staffId, int storeId) {
+        // Retrieve staff member (throws NotFoundException if not found)
+        Staff s = get(staffId);
+
+        // Retrieve store (throws NotFoundException if not found)
+        var store = storeRepo.findById(storeId)
+                .orElseThrow(() -> new NotFoundException("Store not found: " + storeId));
+
+        // Assign store to staff
+        s.setStore(store);
+
+        // Save and return as DTO
+        staffRepo.save(s);
+        return toDTO(s);
+    }
+
+    @Override
     public java.util.List<StaffDTO> findByPhone(String phone) {
         return staffRepo.findByPhone(phone).stream().map(this::toDTO).collect(Collectors.toList());
     }

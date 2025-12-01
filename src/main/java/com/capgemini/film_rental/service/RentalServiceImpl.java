@@ -9,7 +9,6 @@ import com.capgemini.film_rental.entity.Staff;
 import com.capgemini.film_rental.entity.Customer;
 import com.capgemini.film_rental.exception.NotFoundException;
 import com.capgemini.film_rental.repository.*;
-import com.capgemini.film_rental.service.IRentalService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -25,16 +24,18 @@ import java.util.List;
 @Transactional
 public class RentalServiceImpl implements IRentalService {
 
-    private final com.capgemini.film_rental.repository.IRentalRepository repo;
-    private final com.capgemini.film_rental.repository.IInventoryRepository invRepo;
-    private final com.capgemini.film_rental.repository.ICustomerRepository custRepo;
-    private final com.capgemini.film_rental.repository.IStaffRepository staffRepo;
+    private final IRentalRepository repo;
+    private final IInventoryRepository invRepo;
+    private final ICustomerRepository custRepo;
+    private final IStaffRepository staffRepo;
+    private final IStoreRepository storeRepo;
 
-    public RentalServiceImpl(IRentalRepository repo, IInventoryRepository invRepo, ICustomerRepository custRepo, IStaffRepository staffRepo) {
+    public RentalServiceImpl(IRentalRepository repo, IInventoryRepository invRepo, ICustomerRepository custRepo, IStaffRepository staffRepo, IStoreRepository storeRepo) {
         this.repo = repo;
         this.invRepo = invRepo;
         this.custRepo = custRepo;
         this.staffRepo = staffRepo;
+        this.storeRepo = storeRepo;
     }
     @PersistenceContext
     private EntityManager entityManager;
@@ -79,65 +80,89 @@ public class RentalServiceImpl implements IRentalService {
 
     /**
      * Get top 10 most rented films for a given store.
+     *
+     * @param storeId the store ID to fetch top 10 films for
+     * @return list of top 10 most rented FilmDTO objects
+     * @throws IllegalArgumentException if storeId is null or not positive
+     * @throws NotFoundException if store does not exist or no rentals found for store
      */
     @Override
     @Transactional(readOnly = true)
     public List<FilmDTO> getTopTenFilmsByStore(Integer storeId) {
+        // Validate storeId parameter
         if (storeId == null || storeId <= 0) {
-            throw new IllegalArgumentException("storeId must be a positive integer");
+            throw new IllegalArgumentException("Store ID must be a positive integer");
         }
 
-        String jpql = """
-            SELECT new com.capgemini.film_rental.dto.FilmDTO(
-                f.filmId,
-                f.title,
-                f.description,
-                f.releaseYear,
-                l.name,
-                ol.name,
-                f.rentalDuration,
-                f.rentalRate,
-                f.length,
-                f.replacementCost,
-                f.rating,
-                f.specialFeatures,
-                f.lastUpdate,
-                null
-            )
-            FROM Rental r
-            JOIN r.inventory i
-            JOIN i.film f
-            JOIN i.store s
-            JOIN f.language l
-            LEFT JOIN f.originalLanguage ol
-            WHERE s.storeId = :storeId
-            GROUP BY f.filmId, f.title, f.description, f.releaseYear, l.name, ol.name,
-                     f.rentalDuration, f.rentalRate, f.length, f.replacementCost,
-                     f.rating, f.specialFeatures, f.lastUpdate
-            ORDER BY COUNT(r.rentalId) DESC, f.title ASC
-        """;
+        // Verify store exists
+        if (!storeRepo.existsById(storeId)) {
+            throw new NotFoundException("Store not found with ID: " + storeId);
+        }
 
-        TypedQuery<FilmDTO> query = entityManager.createQuery(jpql, FilmDTO.class);
-        query.setParameter("storeId", storeId);
-        query.setMaxResults(10);
-
-        List<FilmDTO> films = query.getResultList();
-
-        // Populate rental count for each film
-        for (FilmDTO film : films) {
-            Long count = entityManager.createQuery("""
-                SELECT COUNT(r.rentalId)
+        try {
+            String jpql = """
+                SELECT new com.capgemini.film_rental.dto.FilmDTO(
+                    f.filmId,
+                    f.title,
+                    f.description,
+                    f.releaseYear,
+                    l.name,
+                    ol.name,
+                    f.rentalDuration,
+                    f.rentalRate,
+                    f.length,
+                    f.replacementCost,
+                    f.rating,
+                    f.specialFeatures,
+                    f.lastUpdate,
+                    null
+                )
                 FROM Rental r
                 JOIN r.inventory i
-                WHERE i.film.filmId = :filmId AND i.store.storeId = :storeId
-            """, Long.class)
-                    .setParameter("filmId", film.getFilmId())
-                    .setParameter("storeId", storeId)
-                    .getSingleResult();
+                JOIN i.film f
+                JOIN i.store s
+                JOIN f.language l
+                LEFT JOIN f.originalLanguage ol
+                WHERE s.storeId = :storeId
+                GROUP BY f.filmId, f.title, f.description, f.releaseYear, l.name, ol.name,
+                         f.rentalDuration, f.rentalRate, f.length, f.replacementCost,
+                         f.rating, f.specialFeatures, f.lastUpdate
+                ORDER BY COUNT(r.rentalId) DESC, f.title ASC
+            """;
 
-            film.setRentalCount(count);
+            TypedQuery<FilmDTO> query = entityManager.createQuery(jpql, FilmDTO.class);
+            query.setParameter("storeId", storeId);
+            query.setMaxResults(10);
+
+            List<FilmDTO> films = query.getResultList();
+
+            // Check if any rentals exist for this store
+            if (films == null || films.isEmpty()) {
+                throw new NotFoundException("No rental records found for store ID: " + storeId);
+            }
+
+            // Populate rental count for each film
+            for (FilmDTO film : films) {
+                Long count = entityManager.createQuery("""
+                    SELECT COUNT(r.rentalId)
+                    FROM Rental r
+                    JOIN r.inventory i
+                    WHERE i.film.filmId = :filmId AND i.store.storeId = :storeId
+                """, Long.class)
+                        .setParameter("filmId", film.getFilmId())
+                        .setParameter("storeId", storeId)
+                        .getSingleResult();
+
+                film.setRentalCount(count);
+            }
+
+            return films;
+        } catch (IllegalArgumentException | NotFoundException e) {
+            // Re-throw validation and not found exceptions
+            throw e;
+        } catch (Exception e) {
+            // Wrap any unexpected exceptions
+            throw new RuntimeException("Error retrieving top 10 films for store ID: " + storeId, e);
         }
-
-        return films;
     }
 }

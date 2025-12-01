@@ -14,6 +14,8 @@ public interface IStaffService {
 
     StaffDTO updateEmail(int id, String email);
 
+    StaffDTO assignStore(int staffId, int storeId);
+
     java.util.List<StaffDTO> findByPhone(String phone);
 
     java.util.List<StaffDTO> findByCountry(String country);

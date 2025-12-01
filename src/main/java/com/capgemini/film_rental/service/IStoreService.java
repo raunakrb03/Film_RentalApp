@@ -14,4 +14,8 @@ public interface IStoreService {
     StoreDTO assignAddress(int storeId, int addressId);
 
     List<StoreDTO.ManagerAndStoreView> managersOverview();
+
+    StoreDTO assignManager(int storeId, int managerStaffId);
+
+    StoreDTO findByPhone(String phone);
 }

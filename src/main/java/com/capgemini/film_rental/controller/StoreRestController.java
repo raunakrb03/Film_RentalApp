@@ -38,8 +38,18 @@ public class StoreRestController {
         return service.assignAddress(storeId, addressId);
     }
 
+    @PutMapping("/{storeId}/manager/{manager_staff_id}")
+    public StoreDTO assignManager(@PathVariable int storeId, @PathVariable(name = "manager_staff_id") int managerStaffId) {
+        return service.assignManager(storeId, managerStaffId);
+    }
+
     @GetMapping("/managers")
     public List<StoreDTO.ManagerAndStoreView> managersOverview() {
         return service.managersOverview();
+    }
+
+    @GetMapping("/phone/{phone}")
+    public StoreDTO byPhone(@PathVariable String phone) {
+        return service.findByPhone(phone);
     }
 }

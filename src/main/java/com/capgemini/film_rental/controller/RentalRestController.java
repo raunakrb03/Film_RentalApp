@@ -4,11 +4,8 @@ package com.capgemini.film_rental.controller;
 import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.dto.RentalCreateDTO;
 import com.capgemini.film_rental.dto.RentalDTO;
-import com.capgemini.film_rental.entity.Rental;
 import com.capgemini.film_rental.service.IRentalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,11 +40,7 @@ public class RentalRestController {
      * Display top 10 most rented Films of a Store
      */
     @GetMapping("/toptenfilms/store/{id}")
-    public ResponseEntity<List<FilmDTO>> getTopTenFilmsByStore(@PathVariable("id") Integer storeId) {
-        if (storeId == null || storeId <= 0) {
-            return ResponseEntity.badRequest().build();
-        }
-        List<FilmDTO> films = service.getTopTenFilmsByStore(storeId);
-        return ResponseEntity.ok(films);
+    public List<FilmDTO> getTopTenFilmsByStore(@PathVariable("id") Integer storeId) {
+        return service.getTopTenFilmsByStore(storeId);
     }
 }

@@ -70,6 +70,23 @@ public class FilmRestController {
         FilmDTO updated = service.addActor(id, actorId);
         return ResponseEntity.status(HttpStatus.CREATED).body(updated);
     }
+    @GetMapping("/duration/gt/{rd}")
+    public ResponseEntity<List<FilmDTO>> getFilmsWithRentalDurationGreaterThan(@PathVariable byte rd) {
+        return ResponseEntity.ok(service.findByRentalDurationGreaterThan(rd));
+    }
+    @GetMapping("/length/lt/{length}")
+    public ResponseEntity<List<FilmDTO>> getFilmsWithLengthLessThan(@PathVariable short length) {
+        return ResponseEntity.ok(service.findByLengthLessThan(length));
+    }
+
+
+    @GetMapping("/countbyyear")
+    public Map<Integer, Long> countFilmsByYear() {
+        return service.countFilmsByYear();
+    }
+
+
+
 
 
 

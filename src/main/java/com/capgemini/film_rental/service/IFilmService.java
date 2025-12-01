@@ -43,4 +43,9 @@ public interface IFilmService {
     FilmDTO addActorToFilm(int filmId, int actorId);
 
     Map<Integer, Long> countFilmsByYear();
+
+    List<FilmDTO> findByLengthLessThan(short length);
+
+    List<FilmDTO> findByRentalDurationGreaterThan(byte rd);
+
 }

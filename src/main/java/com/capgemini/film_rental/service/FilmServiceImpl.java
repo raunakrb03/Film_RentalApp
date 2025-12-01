@@ -103,7 +103,7 @@ public class FilmServiceImpl implements IFilmService {
         f.setTitle(title);
         return FilmMapper.toDTO(filmRepo.save(f));
     }
-
+//praphul's
     @Override
     public FilmDTO updateRating(int filmId, String rating) {
         Film f = getFilm(filmId);
@@ -111,7 +111,49 @@ public class FilmServiceImpl implements IFilmService {
         f.setRating(r);
         return FilmMapper.toDTO(filmRepo.save(f));
     }
+    @Override
+    public FilmDTO addActor(int filmId, int actorId) {
+        Film f = getFilm(filmId);
+        Actor a = actorRepo.findById(actorId).orElseThrow(() -> new NotFoundException("Actor not found"));
+        var list = Optional.ofNullable(f.getActors()).orElseGet(java.util.ArrayList::new);
+        if (!list.contains(a)) {
+            list.add(a);
+            f.setActors(list);
+        }
+        return FilmMapper.toDTO(filmRepo.save(f));
+    }
 
+    @Override
+    public FilmDTO addActorToFilm(int filmId, int actorId) {
+        // alias for addActor, keep behavior consistent
+        return addActor(filmId, actorId);
+    }
+
+    @Override
+    public Map<Integer, Long> countFilmsByYear() {
+        return filmRepo.findAll().stream()
+                .filter(f -> f.getReleaseYear() != null)
+                .collect(Collectors.groupingBy(Film::getReleaseYear, Collectors.counting()));
+    }
+
+
+    @Override
+    public List<FilmDTO> findByLengthLessThan(short length) {
+        return filmRepo.findByLengthLessThan(length)
+                .stream()
+                .map(FilmMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FilmDTO> findByRentalDurationGreaterThan(byte rd) {
+        return filmRepo.findByRentalDurationGreaterThan(rd)
+                .stream()
+                .map(FilmMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    //end
     @Override
     public FilmDTO updateRentalDuration(int filmId, int rentalDuration) {
         Film f = getFilm(filmId);
@@ -166,28 +208,5 @@ public class FilmServiceImpl implements IFilmService {
         return filmRepo.findByTitle(title).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
     }
 
-    @Override
-    public FilmDTO addActor(int filmId, int actorId) {
-        Film f = getFilm(filmId);
-        Actor a = actorRepo.findById(actorId).orElseThrow(() -> new NotFoundException("Actor not found"));
-        var list = Optional.ofNullable(f.getActors()).orElseGet(java.util.ArrayList::new);
-        if (!list.contains(a)) {
-            list.add(a);
-            f.setActors(list);
-        }
-        return FilmMapper.toDTO(filmRepo.save(f));
-    }
 
-    @Override
-    public FilmDTO addActorToFilm(int filmId, int actorId) {
-        // alias for addActor, keep behavior consistent
-        return addActor(filmId, actorId);
-    }
-
-    @Override
-    public Map<Integer, Long> countFilmsByYear() {
-        return filmRepo.findAll().stream()
-                .filter(f -> f.getReleaseYear() != null)
-                .collect(Collectors.groupingBy(Film::getReleaseYear, Collectors.counting()));
-    }
 }

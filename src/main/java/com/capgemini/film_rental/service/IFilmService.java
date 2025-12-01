@@ -18,6 +18,8 @@ public interface IFilmService {
 
     FilmDTO updateRating(int filmId, String rating);
 
+    FilmDTO updateRentalDuration(int filmId, int rentalDuration);
+
     FilmDTO addActor(int filmId, int actorId);
 
     List<FilmDTO> findByCategory(String category);
@@ -25,6 +27,8 @@ public interface IFilmService {
     List<Integer> findActorsOfFilm(int filmId);
 
     List<FilmDTO> findByRatingLessThan(String rating);
+
+    List<FilmDTO> findByRatingGreaterThan(String rating);
 
     List<FilmDTO> findByReleaseYearBetween(int from, int to);
 

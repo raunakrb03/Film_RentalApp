@@ -23,4 +23,8 @@ public interface ICustomerService {
 
     // Added: return a single customer by phone number (throws if not found)
     CustomerDTO getCustomerByNumber(String phone);
+
+    CustomerDTO updateEmail(int id, String email);
+    java.util.List<CustomerDTO> findInactiveCustomers();
+    java.util.List<CustomerDTO> findByFirstName(String firstName);
 }

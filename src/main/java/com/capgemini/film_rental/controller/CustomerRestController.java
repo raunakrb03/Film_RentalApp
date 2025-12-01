@@ -62,4 +62,21 @@ public class CustomerRestController {
     public CustomerDTO updateFirstName(@PathVariable int id, @PathVariable String fn) {
         return service.updateFirstName(id, fn);
     }
+
+
+    @PutMapping("/update/{id}/email")
+    public CustomerDTO updateEmail(@PathVariable int id, @RequestParam String email) {
+        return service.updateEmail(id, email);
+    }
+
+    @GetMapping("/inactive")
+    public java.util.List<CustomerDTO> getInactiveCustomers() {
+        return service.findInactiveCustomers();
+    }
+
+    @GetMapping("/firstname/{fn}")
+    public java.util.List<CustomerDTO> getCustomersByFirstName(@PathVariable String fn) {
+        return service.findByFirstName(fn);
+    }
+
 }

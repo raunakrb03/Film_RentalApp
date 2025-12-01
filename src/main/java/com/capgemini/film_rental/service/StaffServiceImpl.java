@@ -12,6 +12,7 @@ import com.capgemini.film_rental.service.IStaffService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,4 +108,26 @@ public class StaffServiceImpl implements IStaffService {
     public java.util.List<StaffDTO> findByEmail(String email) {
         return staffRepo.findByEmail(email).stream().map(this::toDTO).collect(Collectors.toList());
     }
+
+
+    @Override
+    public StaffDTO updatePhone(int id, String phone) {
+        Staff s = get(id);
+        if (s.getAddress() == null) {
+            throw new NotFoundException("Address not found for staff: " + id);
+        }
+        s.getAddress().setPhone(phone);
+        staffRepo.save(s);
+        return toDTO(s);
+    }
+
+    @Override
+    public List<StaffDTO> findByCity(String city) {
+        return staffRepo.findByCity(city)
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
 }

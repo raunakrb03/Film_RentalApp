@@ -62,4 +62,17 @@ public class StaffRestController {
     public List<StaffDTO> byEmail(@PathVariable String email) {
         return service.findByEmail(email);
     }
+
+
+    @PutMapping("/update/phone/{id}")
+    public StaffDTO updatePhone(@PathVariable int id, @RequestParam String phone) {
+        return service.updatePhone(id, phone);
+    }
+
+    @GetMapping("/city/{city}")
+    public List<StaffDTO> byCity(@PathVariable String city) {
+        return service.findByCity(city);
+    }
+
+
 }

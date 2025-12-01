@@ -53,6 +53,11 @@ public class FilmRestController {
         return service.findActorsOfFilm(id);
     }
 
+    @PutMapping("/{id}/actors/{actorId}")
+    public FilmDTO addActorToFilm(@PathVariable int id, @PathVariable int actorId) {
+        return service.addActorToFilm(id, actorId);
+    }
+
     @GetMapping("/rating/lt/{rating}")
     public List<FilmDTO> ratingLT(@PathVariable String rating) {
         return service.findByRatingLessThan(rating);

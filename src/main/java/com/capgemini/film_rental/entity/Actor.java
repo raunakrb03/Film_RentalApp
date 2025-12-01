@@ -37,55 +37,69 @@ public class Actor
     @JsonIgnore
     private LocalDateTime lastUpdate;
     
-    @ManyToMany
-    @JoinTable(
-            name = "film_actor",
-            joinColumns = @JoinColumn(name = "actor_id"),
-            inverseJoinColumns = @JoinColumn(name = "film_id")
-    )
-    
+    // Inverse side of ManyToMany - Film is the owning side (defines the join table)
+    @ManyToMany(mappedBy = "actors")
     @JsonIgnore
     private List<Film> films=new ArrayList<>();
     
     
 
-	public int getActorId() {
-		return actorId;
-	}
+    public int getActorId() {
+        return actorId;
+    }
 
-	public void setActorId(int actorId) {
-		this.actorId = actorId;
-	}
+    public void setActorId(int actorId) {
+        this.actorId = actorId;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public LocalDateTime getLastUpdate() {
-		return lastUpdate;
-	}
+    public LocalDateTime getLastUpdate() {
+        return lastUpdate;
+    }
 
-	public void setLastUpdate(LocalDateTime lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
-	public List<Film> getFilms() {
-		return films;
-	}
+    public List<Film> getFilms() {
+        return films;
+    }
 
-	public void setFilms(List<Film> films) {
-		this.films = films;
-	}
+    public void setFilms(List<Film> films) {
+        this.films = films;
+    }
+
+    // Helper methods to keep both sides in sync
+    public void addFilm(Film film) {
+        if (!this.films.contains(film)) {
+            this.films.add(film);
+        }
+        if (!film.getActors().contains(this)) {
+            film.getActors().add(this);
+        }
+    }
+
+    public void removeFilm(Film film) {
+        if (this.films.contains(film)) {
+            this.films.remove(film);
+        }
+        if (film.getActors().contains(this)) {
+            film.getActors().remove(this);
+        }
+    }
 }

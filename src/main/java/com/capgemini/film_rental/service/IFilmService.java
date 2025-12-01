@@ -26,4 +26,6 @@ public interface IFilmService {
     List<FilmDTO> findByLengthGreaterThan(short length);
 
     List<FilmDTO> findByRentalRateGreaterThan(java.math.BigDecimal rate);
+
+    FilmDTO addActorToFilm(int filmId, int actorId);
 }

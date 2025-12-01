@@ -31,4 +31,10 @@ public class ActorRestController {
     public ResponseEntity<List<ActorDTO>> getAll(){
         return ResponseEntity.ok(actorService.getAllActors().stream().map(ActorMapper::toDTO).toList());
     }
+
+    // Added endpoint to return list of film IDs for a given actor
+    @GetMapping("/{id}/films")
+    public ResponseEntity<List<Integer>> getFilmsOfActor(@PathVariable("id") int actorId) {
+        return ResponseEntity.ok(actorService.filmsOfActor(actorId));
+    }
 }

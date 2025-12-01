@@ -33,6 +33,11 @@ public class StaffRestController {
         return service.updateFirstName(id, fn);
     }
 
+    @PutMapping("/update/email/{id}")
+    public StaffDTO updateEmail(@PathVariable int id, @RequestParam String email) {
+        return service.updateEmail(id, email);
+    }
+
     @GetMapping("/phone/{phone}")
     public List<StaffDTO> byPhone(@PathVariable String phone) {
         return service.findByPhone(phone);
@@ -51,5 +56,10 @@ public class StaffRestController {
     @GetMapping("/lastname/{ln}")
     public List<StaffDTO> byLN(@PathVariable String ln) {
         return service.findByLastName(ln);
+    }
+
+    @GetMapping("/email/{email}")
+    public List<StaffDTO> byEmail(@PathVariable String email) {
+        return service.findByEmail(email);
     }
 }

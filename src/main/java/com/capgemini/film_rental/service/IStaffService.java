@@ -12,6 +12,8 @@ public interface IStaffService {
 
     StaffDTO updateFirstName(int id, String fn);
 
+    StaffDTO updateEmail(int id, String email);
+
     java.util.List<StaffDTO> findByPhone(String phone);
 
     java.util.List<StaffDTO> findByCountry(String country);
@@ -19,4 +21,6 @@ public interface IStaffService {
     java.util.List<StaffDTO> findByFirstName(String fn);
 
     java.util.List<StaffDTO> findByLastName(String ln);
+
+    java.util.List<StaffDTO> findByEmail(String email);
 }

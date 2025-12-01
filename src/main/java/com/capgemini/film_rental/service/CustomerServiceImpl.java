@@ -93,6 +93,11 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    public java.util.List<CustomerDTO> findByCountry(String country) {
+        return repo.findByCountry(country).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public CustomerDTO assignAddress(int id, int addressId) {
         Customer c = get(id);
         c.setAddress(getAddr(addressId));

@@ -76,6 +76,14 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public StaffDTO updateEmail(int id, String email) {
+        Staff s = get(id);
+        s.setEmail(email);
+        staffRepo.save(s);
+        return toDTO(s);
+    }
+
+    @Override
     public java.util.List<StaffDTO> findByPhone(String phone) {
         return staffRepo.findByPhone(phone).stream().map(this::toDTO).collect(Collectors.toList());
     }
@@ -93,5 +101,10 @@ public class StaffServiceImpl implements IStaffService {
     @Override
     public java.util.List<StaffDTO> findByLastName(String ln) {
         return staffRepo.findByLastNameContainingIgnoreCase(ln).stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public java.util.List<StaffDTO> findByEmail(String email) {
+        return staffRepo.findByEmail(email).stream().map(this::toDTO).collect(Collectors.toList());
     }
 }

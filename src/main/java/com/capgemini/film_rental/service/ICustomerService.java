@@ -2,8 +2,6 @@ package com.capgemini.film_rental.service;
 
 import com.capgemini.film_rental.dto.CustomerDTO;
 
-import java.util.List;
-
 public interface ICustomerService {
     CustomerDTO assignStore(int id, int storeId);
 
@@ -16,4 +14,7 @@ public interface ICustomerService {
     java.util.List<CustomerDTO> findByEmail(String email);
 
     CustomerDTO updatePhone(int id, String phone);
+
+    // Added: return a single customer by phone number (throws if not found)
+    CustomerDTO getCustomerByNumber(String phone);
 }

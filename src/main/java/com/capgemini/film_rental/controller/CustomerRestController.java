@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
+@SuppressWarnings("unused") // Spring instantiates this controller reflectively; suppress "never used" warnings
 public class CustomerRestController {
 
     private final ICustomerService service;

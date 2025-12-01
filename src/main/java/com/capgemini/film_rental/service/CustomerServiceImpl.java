@@ -8,7 +8,6 @@ import com.capgemini.film_rental.exception.NotFoundException;
 import com.capgemini.film_rental.repository.IAddressRepository;
 import com.capgemini.film_rental.repository.ICustomerRepository;
 import com.capgemini.film_rental.repository.IStoreRepository;
-import com.capgemini.film_rental.service.ICustomerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,5 +88,11 @@ public class CustomerServiceImpl implements ICustomerService {
         a.setPhone(phone);
         addressRepo.save(a);
         return toDTO(c);
+    }
+
+    @Override
+    public CustomerDTO getCustomerByNumber(String phone) {
+        return repo.findByPhone(phone).stream().findFirst().map(this::toDTO)
+                .orElseThrow(() -> new NotFoundException("Customer not found for phone: " + phone));
     }
 }

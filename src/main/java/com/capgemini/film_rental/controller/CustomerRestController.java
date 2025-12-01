@@ -1,5 +1,6 @@
 package com.capgemini.film_rental.controller;
 
+import com.capgemini.film_rental.dto.CustomerCreateDTO;
 import com.capgemini.film_rental.dto.CustomerDTO;
 import com.capgemini.film_rental.service.ICustomerService;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,11 @@ public class CustomerRestController {
 
     public CustomerRestController(ICustomerService service) {
         this.service = service;
+    }
+
+    @PostMapping("/post")
+    public CustomerDTO createCustomer(@RequestBody CustomerCreateDTO dto) {
+        return service.createCustomer(dto);
     }
 
     @PutMapping("/update/{id}/store")
@@ -45,5 +51,10 @@ public class CustomerRestController {
     @PutMapping("/update/{id}/phone")
     public CustomerDTO updatePhone(@PathVariable int id, @RequestParam String phone) {
         return service.updatePhone(id, phone);
+    }
+
+    @PutMapping("/update/{id}/{fn}")
+    public CustomerDTO updateFirstName(@PathVariable int id, @PathVariable String fn) {
+        return service.updateFirstName(id, fn);
     }
 }

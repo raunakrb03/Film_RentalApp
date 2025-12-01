@@ -37,4 +37,10 @@ public class ActorRestController {
     public ResponseEntity<List<Integer>> getFilmsOfActor(@PathVariable("id") int actorId) {
         return ResponseEntity.ok(actorService.filmsOfActor(actorId));
     }
+
+    @PutMapping("/update/firstname/{id}")
+    public ResponseEntity<ActorDTO> updateFirstName(@PathVariable int id, @RequestParam String firstName) {
+        var updated = actorService.updateFirstName(id, firstName);
+        return ResponseEntity.ok(ActorMapper.toDTO(updated));
+    }
 }

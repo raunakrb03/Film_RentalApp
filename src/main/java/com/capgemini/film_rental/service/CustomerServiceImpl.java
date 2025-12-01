@@ -1,5 +1,6 @@
 package com.capgemini.film_rental.service;
 
+import com.capgemini.film_rental.dto.CustomerCreateDTO;
 import com.capgemini.film_rental.dto.CustomerDTO;
 import com.capgemini.film_rental.entity.Address;
 import com.capgemini.film_rental.entity.Customer;
@@ -52,6 +53,29 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
+    public CustomerDTO createCustomer(CustomerCreateDTO dto) {
+        Customer c = new Customer();
+        c.setFirstName(dto.getFirstName());
+        c.setLastName(dto.getLastName());
+        c.setEmail(dto.getEmail());
+        c.setActive(dto.getActive() != null ? dto.getActive() : true);
+        c.setCreateDate(java.time.LocalDateTime.now());
+
+        // Set store if provided
+        if (dto.getStoreId() != null) {
+            c.setStore(getStore(dto.getStoreId()));
+        }
+
+        // Set address if provided
+        if (dto.getAddressId() != null) {
+            c.setAddress(getAddr(dto.getAddressId()));
+        }
+
+        Customer saved = repo.save(c);
+        return toDTO(saved);
+    }
+
+    @Override
     public CustomerDTO assignStore(int id, int storeId) {
         Customer c = get(id);
         c.setStore(getStore(storeId));
@@ -88,6 +112,13 @@ public class CustomerServiceImpl implements ICustomerService {
         a.setPhone(phone);
         addressRepo.save(a);
         return toDTO(c);
+    }
+
+    @Override
+    public CustomerDTO updateFirstName(int id, String firstName) {
+        Customer c = get(id);
+        c.setFirstName(firstName);
+        return toDTO(repo.save(c));
     }
 
     @Override

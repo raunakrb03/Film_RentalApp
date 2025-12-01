@@ -134,4 +134,27 @@ public class FilmRestController {
     public List<FilmDTO> findByTitle(@PathVariable String title) {
         return service.findByTitle(title);
     }
+
+    @GetMapping("/language/{lang}")
+    public List<FilmDTO> byLanguage(@PathVariable String lang){
+        return service.findByLanguage(lang);
+    }
+
+    @GetMapping("/rate/lt/{rate}")
+    public List<FilmDTO> rateLT(@PathVariable BigDecimal rate){
+        return service.findByRentalRateLessThan(rate);
+    }
+
+    @GetMapping("/year/{year}")
+    public List<FilmDTO> findByYear(@PathVariable int year) {
+        return service.findByYear(year);
+    }
+
+    @PutMapping("/update/rentalrate/{id}")
+    public FilmDTO updateRentalRate(@PathVariable int id, @RequestParam BigDecimal rate){
+        return service.updateRentalRate(id, rate);
+    }
+
+
+
 }

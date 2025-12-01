@@ -209,4 +209,33 @@ public class FilmServiceImpl implements IFilmService {
     }
 
 
+    @Override
+    public FilmDTO updateRentalRate(int filmId, BigDecimal rate) {
+        Film f = getFilm(filmId);
+        f.setRentalRate(rate);
+        return FilmMapper.toDTO(filmRepo.save(f));
+    }
+
+    @Override
+    public List<FilmDTO> findByLanguage(String lang) {
+        return filmRepo.findByLanguageName(lang)
+                .stream()
+                .map(FilmMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<FilmDTO> findByRentalRateLessThan(BigDecimal rate) {
+        return filmRepo.findByRentalRateLessThan(rate).stream().map(FilmMapper::toDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public java.util.List<FilmDTO> findByYear(int year){
+        return filmRepo.findByReleaseYear(year).stream().map(FilmMapper::toDTO).toList();
+    }
+
+
+
+
+
 }

@@ -3,6 +3,7 @@ package com.capgemini.film_rental.service;
 import com.capgemini.film_rental.dto.FilmCreateDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -47,5 +48,14 @@ public interface IFilmService {
     List<FilmDTO> findByLengthLessThan(short length);
 
     List<FilmDTO> findByRentalDurationGreaterThan(byte rd);
+
+
+    FilmDTO updateRentalRate(int filmId, BigDecimal rate);
+    List<FilmDTO> findByLanguage(String lang);
+    List<FilmDTO> findByRentalRateLessThan(java.math.BigDecimal rate);
+
+    // Added: search films by exact release year
+    List<FilmDTO> findByYear(int year);
+
 
 }

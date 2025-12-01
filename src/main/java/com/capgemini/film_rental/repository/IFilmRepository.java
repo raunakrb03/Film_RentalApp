@@ -18,8 +18,15 @@ public interface IFilmRepository extends JpaRepository<Film, Integer> {
     List<Film> findByReleaseYearBetween(@Param("from") Integer from, @Param("to") Integer to);
     List<Film> findByLengthGreaterThan(Short length);
     @Query("select f from Film f where f.rentalRate > :rate")
-    List<Film> findByRentalRateGreaterThan(@Param("rate") BigDecimal rate);
 
+    List<Film> findByRentalRateGreaterThan(@Param("rate") BigDecimal rate);
+    @Query("select f from Film f where lower(f.language.name) = lower(:lang)")
+    List<Film> findByLanguageName(@Param("lang") String lang);
+
+    @Query("select f from Film f where f.rentalRate < :rate")
+    List<Film> findByRentalRateLessThan(@Param("rate") BigDecimal rate);
+
+    List<Film> findByReleaseYear(Integer year);
     List<Film> findByRatingLessThan(Rating rating);
     List<Film> findByRatingGreaterThan(Rating rating);
     List<Film> findByRentalDurationLessThan(int rentalDuration);

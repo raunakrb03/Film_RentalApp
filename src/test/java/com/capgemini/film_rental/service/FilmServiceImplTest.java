@@ -8,6 +8,7 @@ import com.capgemini.film_rental.repository.IFilmRepository;
 import com.capgemini.film_rental.repository.ICategoryRepository;
 import com.capgemini.film_rental.repository.ILanguageRepository;
 import com.capgemini.film_rental.repository.IActorRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -24,15 +25,17 @@ public class FilmServiceImplTest {
     private ILanguageRepository languageRepo;
     private FilmServiceImpl service;
     private IActorRepository actorRepo;
+
     @BeforeEach
     public void setUp() {
         filmRepo = mock(IFilmRepository.class);
         categoryRepo = mock(ICategoryRepository.class);
         languageRepo = mock(ILanguageRepository.class);
-        service = new FilmServiceImpl(filmRepo, categoryRepo, languageRepo);
-    }
         actorRepo = mock(IActorRepository.class);
         service = new FilmServiceImpl(filmRepo, categoryRepo, languageRepo, actorRepo);
+    }
+
+    @Test
     public void updateRating_setsRatingAndSaves() {
         Film f = new Film();
         f.setFilmId(1);

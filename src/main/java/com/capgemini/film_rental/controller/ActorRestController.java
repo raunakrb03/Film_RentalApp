@@ -38,5 +38,4 @@ public class ActorRestController {
                 .map(ActorMapper::toDTO)
                 .toList());
     }
-
 }

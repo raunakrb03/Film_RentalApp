@@ -18,4 +18,6 @@ public interface IStoreService {
     List<StoreDTO> findByCountry(String country);
 
     List<StoreDTO.ManagerAndStoreView> managersOverview();
+    List<Integer> staffIds(int storeId);
+    StoreDTO createStore(StoreDTO dto);
 }

@@ -60,7 +60,15 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public List<StoreRevenueByDateDTO> cumulativeRevenueAllStoresDatewise() {
         return repo.revenueAllStoresDatewise().stream()
-                .map(arr -> new StoreRevenueByDateDTO(((Number) arr[0]).intValue(), (java.time.LocalDate) arr[1], (BigDecimal) arr[2]))
+                .map(arr -> new StoreRevenueByDateDTO(((Number) arr[0]).intValue(), ((java.sql.Date) arr[1]).toLocalDate(), (BigDecimal) arr[2]))
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<StoreRevenueByDateDTO> cumulativeRevenueByDateForStore(int storeId) {
+        return repo.revenueByDateForStore(storeId).stream()
+                .map(arr -> new StoreRevenueByDateDTO(storeId, ((java.sql.Date) arr[0]).toLocalDate(), (BigDecimal) arr[1]))
                 .collect(Collectors.toList());
     }
 }

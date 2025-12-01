@@ -39,6 +39,16 @@ public class RentalRestController {
     }
 
     /**
+     * GET /api/rental/toptenfilms
+     * Display top 10 most rented Films across all stores
+     */
+    @GetMapping("/toptenfilms")
+    public ResponseEntity<List<FilmDTO>> getTopTenMostRentedFilms() {
+        List<FilmDTO> films = service.getTopTenMostRentedFilms();
+        return ResponseEntity.ok(films);
+    }
+
+    /**
      * GET /api/rental/toptenfilms/store/{id}
      * Display top 10 most rented Films of a Store
      */

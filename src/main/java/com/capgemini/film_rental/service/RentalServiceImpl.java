@@ -16,6 +16,7 @@ import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
@@ -77,9 +78,6 @@ public class RentalServiceImpl implements IRentalService {
         return dto;
     }
 
-    /**
-     * Get top 10 most rented films for a given store.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<FilmDTO> getTopTenFilmsByStore(Integer storeId) {
@@ -88,40 +86,44 @@ public class RentalServiceImpl implements IRentalService {
         }
 
         String jpql = """
-            SELECT new com.capgemini.film_rental.dto.FilmDTO(
-                f.filmId,
-                f.title,
-                f.description,
-                f.releaseYear,
-                l.name,
-                ol.name,
-                f.rentalDuration,
-                f.rentalRate,
-                f.length,
-                f.replacementCost,
-                f.rating,
-                f.specialFeatures,
-                f.lastUpdate,
-                null
-            )
+            SELECT f.filmId, f.title, f.description, f.releaseYear, f.language.languageId, 
+                   f.originalLanguage.languageId, f.rentalDuration, f.rentalRate, f.length, 
+                   f.replacementCost, f.rating, f.specialFeatures, f.lastUpdate
             FROM Rental r
             JOIN r.inventory i
             JOIN i.film f
             JOIN i.store s
-            JOIN f.language l
-            LEFT JOIN f.originalLanguage ol
             WHERE s.storeId = :storeId
-            GROUP BY f.filmId, f.title, f.description, f.releaseYear, l.name, ol.name,
+            GROUP BY f.filmId, f.title, f.description, f.releaseYear, f.language.languageId, f.originalLanguage.languageId,
                      f.rentalDuration, f.rentalRate, f.length, f.replacementCost,
                      f.rating, f.specialFeatures, f.lastUpdate
             ORDER BY COUNT(r.rentalId) DESC, f.title ASC
         """;
 
-        TypedQuery<FilmDTO> query = entityManager.createQuery(jpql, FilmDTO.class);
+        TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
         query.setParameter("storeId", storeId);
         query.setMaxResults(10);
 
-        List<FilmDTO> films = query.getResultList();
+        List<Object[]> results = query.getResultList();
+        List<FilmDTO> films = new java.util.ArrayList<>();
+
+        for (Object[] row : results) {
+            FilmDTO film = new FilmDTO();
+            film.setFilmId(((Number) row[0]).intValue());
+            film.setTitle((String) row[1]);
+            film.setDescription((String) row[2]);
+            film.setReleaseYear((Integer) row[3]);
+            film.setLanguageId(row[4] != null ? ((Number) row[4]).intValue() : null);
+            film.setOriginalLanguageId(row[5] != null ? ((Number) row[5]).intValue() : null);
+            film.setRentalDuration(((Number) row[6]).intValue());
+            film.setRentalRate((BigDecimal) row[7]);
+            film.setLength((Short) row[8]);
+            film.setReplacementCost((BigDecimal) row[9]);
+            film.setRating(((com.capgemini.film_rental.entity.enums.Rating) row[10]).toString());
+            film.setSpecialFeatures((String) row[11]);
+            film.setLastUpdate((LocalDateTime) row[12]);
+            films.add(film);
+        }
 
         // Populate rental count for each film
         for (FilmDTO film : films) {
@@ -133,6 +135,66 @@ public class RentalServiceImpl implements IRentalService {
             """, Long.class)
                     .setParameter("filmId", film.getFilmId())
                     .setParameter("storeId", storeId)
+                    .getSingleResult();
+
+            film.setRentalCount(count);
+        }
+
+        return films;
+    }
+
+    /**
+     * Get top 10 most rented films across all stores.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<FilmDTO> getTopTenMostRentedFilms() {
+        String jpql = """
+            SELECT f.filmId, f.title, f.description, f.releaseYear, f.language.languageId, 
+                   f.originalLanguage.languageId, f.rentalDuration, f.rentalRate, f.length, 
+                   f.replacementCost, f.rating, f.specialFeatures, f.lastUpdate
+            FROM Rental r
+            JOIN r.inventory i
+            JOIN i.film f
+            GROUP BY f.filmId, f.title, f.description, f.releaseYear, f.language.languageId, f.originalLanguage.languageId,
+                     f.rentalDuration, f.rentalRate, f.length, f.replacementCost,
+                     f.rating, f.specialFeatures, f.lastUpdate
+            ORDER BY COUNT(r.rentalId) DESC, f.title ASC
+        """;
+
+        TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
+        query.setMaxResults(10);
+
+        List<Object[]> results = query.getResultList();
+        List<FilmDTO> films = new java.util.ArrayList<>();
+
+        for (Object[] row : results) {
+            FilmDTO film = new FilmDTO();
+            film.setFilmId(((Number) row[0]).intValue());
+            film.setTitle((String) row[1]);
+            film.setDescription((String) row[2]);
+            film.setReleaseYear((Integer) row[3]);
+            film.setLanguageId(row[4] != null ? ((Number) row[4]).intValue() : null);
+            film.setOriginalLanguageId(row[5] != null ? ((Number) row[5]).intValue() : null);
+            film.setRentalDuration(((Number) row[6]).intValue());
+            film.setRentalRate((BigDecimal) row[7]);
+            film.setLength((Short) row[8]);
+            film.setReplacementCost((BigDecimal) row[9]);
+            film.setRating(((com.capgemini.film_rental.entity.enums.Rating) row[10]).toString());
+            film.setSpecialFeatures((String) row[11]);
+            film.setLastUpdate((LocalDateTime) row[12]);
+            films.add(film);
+        }
+
+        // Populate rental count for each film
+        for (FilmDTO film : films) {
+            Long count = entityManager.createQuery("""
+                SELECT COUNT(r.rentalId)
+                FROM Rental r
+                JOIN r.inventory i
+                WHERE i.film.filmId = :filmId
+            """, Long.class)
+                    .setParameter("filmId", film.getFilmId())
                     .getSingleResult();
 
             film.setRentalCount(count);

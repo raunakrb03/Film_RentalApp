@@ -1,21 +1,34 @@
 package com.capgemini.film_rental.service;
 
+import com.capgemini.film_rental.dto.FilmInventoryCountDTO;
+import com.capgemini.film_rental.dto.InventoryAddDTO;
 import com.capgemini.film_rental.dto.aggregates.FilmInventoryByStoreDTO;
+import com.capgemini.film_rental.entity.Film;
+import com.capgemini.film_rental.entity.Inventory;
+import com.capgemini.film_rental.entity.Store;
+import com.capgemini.film_rental.exception.NotFoundException;
+import com.capgemini.film_rental.repository.IFilmRepository;
 import com.capgemini.film_rental.repository.IInventoryRepository;
+import com.capgemini.film_rental.repository.IStoreRepository;
 import com.capgemini.film_rental.service.IInventoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class InventoryServiceImpl implements IInventoryService {
 
     private final IInventoryRepository repo;
+    private final IFilmRepository filmRepo;
+    private final IStoreRepository storeRepo;
 
-    public InventoryServiceImpl(IInventoryRepository repo) {
+    public InventoryServiceImpl(IInventoryRepository repo, IFilmRepository filmRepo, IStoreRepository storeRepo) {
         this.repo = repo;
+        this.filmRepo = filmRepo;
+        this.storeRepo = storeRepo;
     }
 
     @Override
@@ -24,5 +37,32 @@ public class InventoryServiceImpl implements IInventoryService {
         if (list.isEmpty()) return new FilmInventoryByStoreDTO(0, 0);
         Object[] arr = list.get(0);
         return new FilmInventoryByStoreDTO(((Number) arr[0]).intValue(), ((Number) arr[1]).longValue());
+    }
+
+    @Override
+    public String addFilmToStore(InventoryAddDTO dto) {
+        Film film = filmRepo.findById(dto.getFilmId())
+                .orElseThrow(() -> new NotFoundException("Film not found with ID: " + dto.getFilmId()));
+        Store store = storeRepo.findById(dto.getStoreId())
+                .orElseThrow(() -> new NotFoundException("Store not found with ID: " + dto.getStoreId()));
+
+        Inventory inventory = new Inventory();
+        inventory.setFilm(film);
+        inventory.setStore(store);
+        inventory.setLastUpdate(java.time.LocalDateTime.now());
+
+        Inventory saved = repo.save(inventory);
+        return "Inventory record created successfully with ID: " + saved.getInventoryId();
+    }
+
+    @Override
+    public List<FilmInventoryCountDTO> getAllFilmsInventoryCounts() {
+        List<Object[]> results = repo.getAllFilmsInventoryCounts();
+        return results.stream().map(row -> new FilmInventoryCountDTO(
+            ((Number) row[0]).intValue(),
+            (String) row[1],
+            ((Number) row[2]).intValue(),
+            ((Number) row[3]).longValue()
+        )).collect(Collectors.toList());
     }
 }

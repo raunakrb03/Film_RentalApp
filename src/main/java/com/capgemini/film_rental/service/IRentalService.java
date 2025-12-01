@@ -13,5 +13,5 @@ public interface IRentalService {
 
     RentalDTO updateReturnDate(int rentalId, String returnDateIso);
     List<FilmDTO> getTopTenFilmsByStore(Integer storeId);
-
+    List<FilmDTO> getTopTenMostRentedFilms();
 }

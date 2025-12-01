@@ -51,8 +51,8 @@ public class Staff {
     @JsonIgnore
     private Store store;
 
-    @Column(name = "active", nullable = false,columnDefinition = "TINYINT(1) DEFAULT 1")
-    private byte active=1;
+    @Column(name = "active", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    private byte active = 1;
 
     @Column(name = "username", nullable = false, length = 16)
     private String username;

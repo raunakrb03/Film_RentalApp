@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/films")
+@SuppressWarnings("unused")
 public class FilmRestController {
 
     private final IFilmService service;
@@ -46,7 +48,6 @@ public class FilmRestController {
         return service.updateTitle(id, title);
     }
 
-    //praphul
     @PutMapping("/update/rating/{id}")
     public ResponseEntity<?> updateRating(@PathVariable int id, @RequestParam String rating) {
         try {
@@ -57,16 +58,19 @@ public class FilmRestController {
         }
         FilmDTO updated = service.updateRating(id, rating);
         return ResponseEntity.ok(updated);
+    }
 
+    @PostMapping("/{id}/actor/{actorId}")
+    public ResponseEntity<FilmDTO> addActor(@PathVariable int id, @PathVariable int actorId) {
+        FilmDTO updated = service.addActor(id, actorId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(updated);
     }
 
 
-    @PutMapping("/{id}/actor/{actorId}")
-    public FilmDTO addActor(@PathVariable int id, @PathVariable int actorId) {
-        return service.addActor(id, actorId);
+    @GetMapping("/countbyyear")
+    public Map<Integer, Long> countFilmsByYear() {
+        return service.countFilmsByYear();
     }
-    //praphul
-
 
     @GetMapping("/category/{category}")
     public List<FilmDTO> byCategory(@PathVariable String category) {
@@ -78,10 +82,6 @@ public class FilmRestController {
         return service.findActorsOfFilm(id);
     }
 
-    @PutMapping("/{id}/actors/{actorId}")
-    public FilmDTO addActorToFilm(@PathVariable int id, @PathVariable int actorId) {
-        return service.addActorToFilm(id, actorId);
-    }
 
     @GetMapping("/rating/lt/{rating}")
     public List<FilmDTO> ratingLT(@PathVariable String rating) {

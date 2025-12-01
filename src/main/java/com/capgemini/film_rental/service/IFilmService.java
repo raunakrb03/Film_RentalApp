@@ -4,6 +4,7 @@ import com.capgemini.film_rental.dto.FilmCreateDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IFilmService {
     String create(FilmCreateDTO dto);
@@ -32,4 +33,6 @@ public interface IFilmService {
     List<FilmDTO> findByRentalRateGreaterThan(java.math.BigDecimal rate);
 
     FilmDTO addActorToFilm(int filmId, int actorId);
+
+    Map<Integer, Long> countFilmsByYear();
 }

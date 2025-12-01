@@ -36,6 +36,10 @@ public interface IFilmService {
 
     List<FilmDTO> findByRentalRateGreaterThan(java.math.BigDecimal rate);
 
+    List<FilmDTO> findByRentalDurationLessThan(int rentalDuration);
+
+    List<FilmDTO> findByTitle(String title);
+
     FilmDTO addActorToFilm(int filmId, int actorId);
 
     Map<Integer, Long> countFilmsByYear();

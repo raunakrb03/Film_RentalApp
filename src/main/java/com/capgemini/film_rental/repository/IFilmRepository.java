@@ -22,4 +22,6 @@ public interface IFilmRepository extends JpaRepository<Film, Integer> {
 
     List<Film> findByRatingLessThan(Rating rating);
     List<Film> findByRatingGreaterThan(Rating rating);
+    List<Film> findByRentalDurationLessThan(int rentalDuration);
+    List<Film> findByTitle(String title);
 }

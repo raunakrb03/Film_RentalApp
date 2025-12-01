@@ -268,7 +268,7 @@ public class Film {
 				rating, releaseYear, rentalDuration, rentalRate, replacementCost, specialFeatures, title);
 	}
 
-	@Override
+    @Override
 	public String toString() {
 		return "Film [filmId=" + filmId + ", title=" + title + ", description=" + description + ", releaseYear="
 				+ releaseYear + ", language=" + language + ", originalLanguage=" + originalLanguage
@@ -277,7 +277,24 @@ public class Film {
 				+ ", lastUpdate=" + lastUpdate + ", actors=" + actors + ", categories=" + categories + "]";
 	}
     
-    
+    // Helper methods to keep both sides in sync (owning side)
+    public void addActor(Actor actor) {
+        if (!this.actors.contains(actor)) {
+            this.actors.add(actor);
+        }
+        if (!actor.getFilms().contains(this)) {
+            actor.getFilms().add(this);
+        }
+    }
 
-    
+    public void removeActor(Actor actor) {
+        if (this.actors.contains(actor)) {
+            this.actors.remove(actor);
+        }
+        if (actor.getFilms().contains(this)) {
+            actor.getFilms().remove(this);
+        }
+    }
+
+
 }

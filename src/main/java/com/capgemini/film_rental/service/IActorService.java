@@ -9,5 +9,6 @@ public interface IActorService {
     public Actor registerActor(Actor actor);
     public Actor getActorById(int id);
     public List<Actor> getAllActors();
+    List<Integer> filmsOfActor(int actorId);
    // public Actor updateActorByFirstName(Actor actor);
 }

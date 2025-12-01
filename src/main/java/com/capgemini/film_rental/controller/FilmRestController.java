@@ -2,7 +2,10 @@ package com.capgemini.film_rental.controller;
 
 import com.capgemini.film_rental.dto.FilmCreateDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
+import com.capgemini.film_rental.entity.enums.Rating;
 import com.capgemini.film_rental.service.IFilmService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -42,6 +45,28 @@ public class FilmRestController {
     public FilmDTO updateTitle(@PathVariable int id, @RequestParam String title) {
         return service.updateTitle(id, title);
     }
+
+    //praphul
+    @PutMapping("/update/rating/{id}")
+    public ResponseEntity<?> updateRating(@PathVariable int id, @RequestParam String rating) {
+        try {
+            // validate rating string maps to enum
+            Rating.valueOf(rating.replace("-", "_"));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body("Invalid rating value. Allowed: G, PG, PG-13, R, NC-17");
+        }
+        FilmDTO updated = service.updateRating(id, rating);
+        return ResponseEntity.ok(updated);
+
+    }
+
+
+    @PutMapping("/{id}/actor/{actorId}")
+    public FilmDTO addActor(@PathVariable int id, @PathVariable int actorId) {
+        return service.addActor(id, actorId);
+    }
+    //praphul
+
 
     @GetMapping("/category/{category}")
     public List<FilmDTO> byCategory(@PathVariable String category) {

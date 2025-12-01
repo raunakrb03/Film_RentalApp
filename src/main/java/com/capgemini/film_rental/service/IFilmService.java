@@ -15,6 +15,10 @@ public interface IFilmService {
 
     FilmDTO updateTitle(int filmId, String title);
 
+    FilmDTO updateRating(int filmId, String rating);
+
+    FilmDTO addActor(int filmId, int actorId);
+
     List<FilmDTO> findByCategory(String category);
 
     List<Integer> findActorsOfFilm(int filmId);

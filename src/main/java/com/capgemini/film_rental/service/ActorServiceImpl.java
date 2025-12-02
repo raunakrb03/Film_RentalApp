@@ -2,9 +2,12 @@
 package com.capgemini.film_rental.service;
 
 import com.capgemini.film_rental.dto.ActorWithFilmCountDTO;
+import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.entity.Actor;
 import com.capgemini.film_rental.entity.Film;
+import com.capgemini.film_rental.mapper.FilmMapper;
 import com.capgemini.film_rental.repository.IActorRepository;
+import com.capgemini.film_rental.repository.IFilmRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,9 @@ import java.util.stream.Collectors;
 public class ActorServiceImpl implements IActorService{
     @Autowired
     IActorRepository actorRepository;
+
+    @Autowired
+    IFilmRepository filmRepository;
 
     @Override
     public Actor registerActor(Actor actor) {
@@ -65,4 +71,32 @@ public class ActorServiceImpl implements IActorService{
         return actorRepository.findByFirstNameContainingIgnoreCase(firstName);
     }
 
+    @Override
+    public List<FilmDTO> assignFilmsToActor(int actorId, List<Integer> filmIds) {
+        // Get the actor
+        Actor actor = getActorById(actorId);
+
+        // Get all films by IDs
+        List<Film> films = filmRepository.findAllById(filmIds);
+
+        // Validate all films exist
+        if (films.size() != filmIds.size()) {
+            throw new EntityNotFoundException("One or more films do not exist");
+        }
+
+        // Assign films to actor
+        for (Film film : films) {
+            if (!actor.getFilms().contains(film)) {
+                actor.getFilms().add(film);
+            }
+        }
+
+        // Save the actor with assigned films
+        actorRepository.save(actor);
+
+        // Return the films as DTOs
+        return films.stream()
+                .map(FilmMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

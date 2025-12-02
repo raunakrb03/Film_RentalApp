@@ -61,12 +61,10 @@ public class CustomerServiceImpl implements ICustomerService {
         c.setActive(dto.getActive() != null ? dto.getActive() : true);
         c.setCreateDate(java.time.LocalDateTime.now());
 
-        // Set store if provided
         if (dto.getStoreId() != null) {
             c.setStore(getStore(dto.getStoreId()));
         }
 
-        // Set address if provided
         if (dto.getAddressId() != null) {
             c.setAddress(getAddr(dto.getAddressId()));
         }

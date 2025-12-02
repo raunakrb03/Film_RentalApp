@@ -80,12 +80,16 @@ public class CustomerRestController {
     public java.util.List<CustomerDTO> getActiveCustomers() {
         return service.findActiveCustomers();
     }
-    public java.util.List<CustomerDTO> getCustomersByFirstName(@PathVariable String fn) {
-        return service.findByFirstName(fn);
-    }
+
 
     @GetMapping("/lastname/{ln}")
     public java.util.List<CustomerDTO> getCustomersByLastName(@PathVariable String ln) {
         return service.findByLastName(ln);
     }
+
+    @GetMapping("/firstname/{fn}")
+    public CustomerDTO getCustomerByFirstName( @PathVariable String fn) {
+        return service.findByFirstName(fn);
+    }
+
 }

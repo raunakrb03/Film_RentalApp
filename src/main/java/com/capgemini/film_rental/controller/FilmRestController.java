@@ -64,7 +64,7 @@ public class FilmRestController {
         return service.updateRentalDuration(id, rentalDuration);
     }
 
-    @PostMapping("/{id}/actor/{actorId}")
+    @PutMapping("/{id}/actor/{actorId}")
     public ResponseEntity<FilmDTO> addActor(@PathVariable int id, @PathVariable int actorId) {
         FilmDTO updated = service.addActor(id, actorId);
         return ResponseEntity.status(HttpStatus.CREATED).body(updated);

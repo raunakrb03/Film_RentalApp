@@ -11,7 +11,6 @@ import com.capgemini.film_rental.repository.IActorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 

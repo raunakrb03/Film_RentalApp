@@ -28,4 +28,6 @@ public interface IStaffService {
 
     List<StaffDTO> findByCity(String city);
 
+    StaffDTO assignAddress(int staffId, int addressId);
+
 }

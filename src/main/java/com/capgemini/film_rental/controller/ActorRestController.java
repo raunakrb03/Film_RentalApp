@@ -3,6 +3,7 @@ package com.capgemini.film_rental.controller;
 import com.capgemini.film_rental.dto.ActorCreateDTO;
 import com.capgemini.film_rental.dto.ActorDTO;
 import com.capgemini.film_rental.dto.ActorWithFilmCountDTO;
+import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.mapper.ActorMapper;
 import com.capgemini.film_rental.service.IActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,19 @@ public class ActorRestController {
     IActorService actorService;
 
     // ...existing code...
+
+    /**
+     * POST /api/actors/post
+     * Add new actor object in DB
+     *
+     * @param dto the actor creation DTO with firstName and lastName
+     * @return success message "Record Created Successfully"
+     */
+    @PostMapping("/post")
+    public String createActor(@Valid @RequestBody ActorCreateDTO dto) {
+        return actorService.createActor(dto);
+    }
+
     @PutMapping("/update/firstname/{id}")
     public ResponseEntity<ActorDTO> updateFirstName(@PathVariable int id, @RequestParam String firstName) {
         var updated = actorService.updateFirstName(id, firstName);
@@ -38,4 +52,21 @@ public class ActorRestController {
                 .map(ActorMapper::toDTO)
                 .toList());
     }
+
+    /**
+     * PUT /api/actors/{id}/film
+     * Assign films to an actor
+     *
+     * @param id the actor ID
+     * @param filmIds list of film IDs to assign
+     * @return collection of assigned films as FilmDTO objects
+     */
+    @PutMapping("/{id}/film")
+    public ResponseEntity<List<FilmDTO>> assignFilmsToActor(@PathVariable int id, @RequestBody List<Integer> filmIds) {
+        List<FilmDTO> films = actorService.assignFilmsToActor(id, filmIds);
+        return ResponseEntity.ok(films);
+    }
 }
+
+
+

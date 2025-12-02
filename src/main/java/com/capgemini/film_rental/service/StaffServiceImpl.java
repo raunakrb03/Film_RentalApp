@@ -120,6 +120,14 @@ public class StaffServiceImpl implements IStaffService {
         staffRepo.save(s);
         return toDTO(s);
     }
+    @Override
+    public StaffDTO assignAddress(int staffId, int addressId) {
+        Staff s = get(staffId);
+        Address a = addressRepo.findById(addressId).orElseThrow(() -> new NotFoundException("Address not found"));
+        s.setAddress(a);
+        Staff saved = staffRepo.save(s);
+        return toDTO(saved);
+    }
 
     @Override
     public List<StaffDTO> findByCity(String city) {
@@ -128,6 +136,15 @@ public class StaffServiceImpl implements IStaffService {
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public StaffDTO assignStore(int staffId, int storeId) {
+        Staff s = get(staffId);
+        s.setStore(storeRepo.findById(storeId).orElseThrow(() -> new NotFoundException("Store not found: " + storeId)));
+        staffRepo.save(s);
+        return toDTO(s);
+    }
+
 
 
 }

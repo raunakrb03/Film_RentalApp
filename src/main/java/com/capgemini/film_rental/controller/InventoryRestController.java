@@ -49,4 +49,5 @@ public class InventoryRestController {
     public List<FilmInventoryCountDTO> inventoryByStore(@PathVariable int id) {
         return service.inventoryByStore(id);
     }
+
 }

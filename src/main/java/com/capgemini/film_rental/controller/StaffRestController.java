@@ -74,5 +74,16 @@ public class StaffRestController {
         return service.findByCity(city);
     }
 
-
+    /**
+     * PUT /api/staff/update/store/{id}
+     * Assign store to a staff member
+     *
+     * @param id the staff ID
+     * @param storeId the store ID to assign (query parameter)
+     * @return updated staff as StaffDTO
+     */
+    @PutMapping("/update/store/{id}")
+    public StaffDTO assignStore(@PathVariable int id, @RequestParam int storeId) {
+        return service.assignStore(id, storeId);
+    }
 }

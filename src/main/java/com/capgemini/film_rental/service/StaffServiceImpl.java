@@ -129,5 +129,11 @@ public class StaffServiceImpl implements IStaffService {
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public StaffDTO assignStore(int staffId, int storeId) {
+        Staff s = get(staffId);
+        s.setStore(storeRepo.findById(storeId).orElseThrow(() -> new NotFoundException("Store not found: " + storeId)));
+        staffRepo.save(s);
+        return toDTO(s);
+    }
 }

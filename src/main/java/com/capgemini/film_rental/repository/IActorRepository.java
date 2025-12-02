@@ -14,5 +14,8 @@ public interface IActorRepository extends JpaRepository<Actor,Integer> {
            "GROUP BY a.actorId, a.firstName, a.lastName " +
            "ORDER BY filmCount DESC LIMIT 10")
     List<Map<String, Object>> findTop10ByFilmCount();
+
     List<Actor> findByFirstNameContainingIgnoreCase(String firstName);
+
+    List<Actor> findByLastNameContainingIgnoreCase(String lastName);
 }

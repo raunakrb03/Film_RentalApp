@@ -54,6 +54,21 @@ public class ActorRestController {
     }
 
     /**
+     * GET /api/actors/lastname/{ln}
+     * Search actors by last name
+     *
+     * @param ln the last name to search for
+     * @return collection of actors with matching last name as ActorDTO
+     */
+    @GetMapping("/lastname/{ln}")
+    public ResponseEntity<List<ActorDTO>> getActorsByLastName(@PathVariable String ln) {
+        var actors = actorService.findByLastName(ln);
+        return ResponseEntity.ok(actors.stream()
+                .map(ActorMapper::toDTO)
+                .toList());
+    }
+
+    /**
      * PUT /api/actors/{id}/film
      * Assign films to an actor
      *

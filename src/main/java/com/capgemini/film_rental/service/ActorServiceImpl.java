@@ -73,6 +73,11 @@ public class ActorServiceImpl implements IActorService{
     }
 
     @Override
+    public List<Actor> findByLastName(String lastName) {
+        return actorRepository.findByLastNameContainingIgnoreCase(lastName);
+    }
+
+    @Override
     public List<FilmDTO> assignFilmsToActor(int actorId, List<Integer> filmIds) {
         // Get the actor
         Actor actor = getActorById(actorId);

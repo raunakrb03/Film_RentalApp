@@ -18,4 +18,5 @@ public interface IActorService {
     List<Actor> findByFirstName(String firstName);
     List<FilmDTO> assignFilmsToActor(int actorId, List<Integer> filmIds);
     String createActor(ActorCreateDTO dto);
+    List<Actor> findByLastName(String lastName);
 }

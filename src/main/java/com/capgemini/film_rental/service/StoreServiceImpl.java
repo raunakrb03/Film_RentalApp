@@ -156,4 +156,20 @@ public class StoreServiceImpl implements IStoreService {
 
     }
 
+    @Override
+    public StoreDTO findByPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty()) {
+            throw new IllegalArgumentException("Phone number cannot be null or empty");
+        }
+        List<Store> stores = repo.findByAddress_Phone(phone);
+        if (stores == null || stores.isEmpty()) {
+            throw new NotFoundException("Store not found with phone: " + phone);
+        }
+        Store store = stores.get(0);
+        StoreDTO d = new StoreDTO();
+        d.setStoreId(store.getStoreId());
+        d.setManagerStaffId(store.getManagerStaff() != null ? store.getManagerStaff().getStaffId() : null);
+        d.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
+        return d;
+    }
 }

@@ -17,4 +17,12 @@ public class FilmInventoryByStoreDTO {
     public long getCopies() {
         return copies;
     }
+
+    public int getStoreId() {
+        return this.storeAddressId;
+    }
+
+    public long getInventoryCount() {
+        return this.copies;
+    }
 }

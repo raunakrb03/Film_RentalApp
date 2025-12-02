@@ -79,4 +79,10 @@ public class RentalRestController {
     }
 
 
+//    @PostMapping("/add/create")
+//    public ResponseEntity<String> createRental(@Valid @RequestBody RentalCreateDTO dto) {
+//        String message = service.create(dto);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+//    }
+
 }

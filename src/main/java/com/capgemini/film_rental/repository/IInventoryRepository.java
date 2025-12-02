@@ -20,4 +20,6 @@ public interface IInventoryRepository extends JpaRepository<Inventory,Integer> {
     @Query("SELECT i.store.storeId, COUNT(i) FROM Inventory i WHERE i.film.filmId = :filmId GROUP BY i.store.storeId")
     List<Object[]> inventoryFilmAcrossStores(@Param("filmId") int filmId);
 
+    @Query("select i.film.filmId, i.film.title, count(i) from Inventory i where i.store.storeId = :storeId group by i.film.filmId, i.film.title order by i.film.title")
+    List<Object[]> inventoryByStore(@Param("storeId") int storeId);
 }

@@ -38,4 +38,15 @@ public class InventoryRestController {
         return service.inventoryOfFilmAcrossStores(id);
     }
 
+    /**
+     * GET /api/inventory/store/{id}
+     * Display inventory of all Films by a Store
+     *
+     * @param id the store ID
+     * @return collection of films with their inventory count as FilmInventoryCountDTO
+     */
+    @GetMapping("/store/{id}")
+    public List<FilmInventoryCountDTO> inventoryByStore(@PathVariable int id) {
+        return service.inventoryByStore(id);
+    }
 }

@@ -77,4 +77,29 @@ public class InventoryServiceImpl implements IInventoryService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<FilmInventoryCountDTO> inventoryByStore(int storeId) {
+        // Validate store exists
+        if (!storeRepo.existsById(storeId)) {
+            throw new NotFoundException("Store not found with ID: " + storeId);
+        }
+
+        // Fetch inventory by store
+        List<Object[]> results = repo.inventoryByStore(storeId);
+
+        // Check if any inventory exists for this store
+        if (results == null || results.isEmpty()) {
+            throw new NotFoundException("No inventory found for store ID: " + storeId);
+        }
+
+        // Convert results to DTOs
+        return results.stream()
+                .map(row -> new FilmInventoryCountDTO(
+                        ((Number) row[0]).intValue(),  // filmId
+                        (String) row[1],               // filmTitle
+                        0,                             // storeId (not included in query)
+                        ((Number) row[2]).longValue()  // inventoryCount
+                ))
+                .collect(Collectors.toList());
+    }
 }

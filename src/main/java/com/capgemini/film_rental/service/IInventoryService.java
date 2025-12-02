@@ -13,4 +13,6 @@ public interface IInventoryService {
 
     List<FilmInventoryCountDTO> getAllFilmsInventoryCounts();
     List<FilmInventoryByStoreDTO> inventoryOfFilmAcrossStores(int filmId);
+
+    List<FilmInventoryCountDTO> inventoryByStore(int storeId);
 }

@@ -91,4 +91,5 @@ public class StaffRestController {
     public StaffDTO assignStore(@PathVariable int id, @RequestParam int storeId) {
         return service.assignStore(id, storeId);
     }
+
 }

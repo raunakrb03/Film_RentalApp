@@ -74,6 +74,11 @@ public class StaffRestController {
         return service.findByCity(city);
     }
 
+
+    @PutMapping("/{id}/address/{addressId}")
+    public StaffDTO assignAddress(@PathVariable int id, @PathVariable int addressId) {
+        return service.assignAddress(id, addressId);
+    }
     /**
      * PUT /api/staff/update/store/{id}
      * Assign store to a staff member

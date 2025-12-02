@@ -20,8 +20,6 @@ public class ActorRestController {
     @Autowired
     IActorService actorService;
 
-    // ...existing code...
-
     /**
      * POST /api/actors/post
      * Add new actor object in DB
@@ -37,6 +35,12 @@ public class ActorRestController {
     @PutMapping("/update/firstname/{id}")
     public ResponseEntity<ActorDTO> updateFirstName(@PathVariable int id, @RequestParam String firstName) {
         var updated = actorService.updateFirstName(id, firstName);
+        return ResponseEntity.ok(ActorMapper.toDTO(updated));
+    }
+
+    @PutMapping("/update/lastname/{id}")
+    public ResponseEntity<ActorDTO> updateLastName(@PathVariable int id, @RequestParam String lastName) {
+        var updated = actorService.updateLastName(id, lastName);
         return ResponseEntity.ok(ActorMapper.toDTO(updated));
     }
 
@@ -81,7 +85,17 @@ public class ActorRestController {
         List<FilmDTO> films = actorService.assignFilmsToActor(id, filmIds);
         return ResponseEntity.ok(films);
     }
+
+    /**
+     * GET /api/actors/{id}/films
+     * Get all films for a given actor
+     *
+     * @param id actor id
+     * @return list of FilmDTO
+     */
+    @GetMapping("/{id}/films")
+    public ResponseEntity<List<FilmDTO>> getFilmsByActorId(@PathVariable int id) {
+        List<FilmDTO> films = actorService.getFilmsOfActor(id);
+        return ResponseEntity.ok(films);
+    }
 }
-
-
-

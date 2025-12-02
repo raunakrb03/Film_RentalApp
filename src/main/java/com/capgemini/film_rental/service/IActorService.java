@@ -8,12 +8,13 @@ import com.capgemini.film_rental.entity.Actor;
 import java.util.List;
 
 public interface IActorService {
-    // ...existing code...
     Actor registerActor(Actor actor);
     Actor getActorById(int id);
     List<Actor> getAllActors();
     List<Integer> filmsOfActor(int actorId);
+    List<FilmDTO> getFilmsOfActor(int actorId);
     Actor updateFirstName(int actorId, String firstName);
+    Actor updateLastName(int actorId, String lastName);
     List<ActorWithFilmCountDTO> findTop10ByFilmCount();
     List<Actor> findByFirstName(String firstName);
     List<FilmDTO> assignFilmsToActor(int actorId, List<Integer> filmIds);

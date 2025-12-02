@@ -79,5 +79,17 @@ public class StoreRestController {
         }
     }
 
+    /**
+     * PUT /api/store/{storeId}/manager/{manager_staff_id}
+     * Assign manager to a store
+     *
+     * @param storeId the store ID
+     * @param manager_staff_id the staff ID to assign as manager
+     * @return updated store as StoreDTO with address details
+     */
+    @PutMapping("/{storeId}/manager/{manager_staff_id}")
+    public StoreDTO assignManager(@PathVariable int storeId, @PathVariable int manager_staff_id) {
+        return service.assignManager(storeId, manager_staff_id);
+    }
 
 }

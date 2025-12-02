@@ -172,4 +172,18 @@ public class StoreServiceImpl implements IStoreService {
         d.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
         return d;
     }
+
+    @Override
+    public StoreDTO assignManager(int storeId, int managerStaffId) {
+        Store store = get(storeId);
+        Staff manager = staffRepo.findById(managerStaffId)
+                .orElseThrow(() -> new NotFoundException("Manager Staff not found with ID: " + managerStaffId));
+        store.setManagerStaff(manager);
+        store = repo.save(store);
+        StoreDTO d = new StoreDTO();
+        d.setStoreId(store.getStoreId());
+        d.setManagerStaffId(store.getManagerStaff() != null ? store.getManagerStaff().getStaffId() : null);
+        d.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
+        return d;
+    }
 }

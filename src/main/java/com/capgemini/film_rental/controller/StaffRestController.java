@@ -74,6 +74,11 @@ public class StaffRestController {
         return service.findByCity(city);
     }
 
+    // New endpoint: assign an address to a staff member
+    @PutMapping("/{id}/address/{addressId}")
+    public StaffDTO assignAddress(@PathVariable int id, @PathVariable int addressId) {
+        return service.assignAddress(id, addressId);
+    }
 
     @PutMapping("/{id}/address/{addressId}")
     public StaffDTO assignAddress(@PathVariable int id, @PathVariable int addressId) {

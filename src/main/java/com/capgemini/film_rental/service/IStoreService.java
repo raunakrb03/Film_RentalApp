@@ -24,4 +24,6 @@ public interface IStoreService {
     StoreDTO createStore(StoreDTO dto);
 
     StoreDTO findByPhone(String phone);
+
+    StoreDTO assignManager(int storeId, int managerStaffId);
 }

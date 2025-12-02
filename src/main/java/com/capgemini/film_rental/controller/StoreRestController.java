@@ -52,4 +52,16 @@ public class StoreRestController {
     public List<StoreDTO.ManagerAndStoreView> managersOverview() {
         return service.managersOverview();
     }
+
+    @GetMapping("/staff/{storeId}")
+    public List<Integer> staffIds(@PathVariable int storeId) {
+        return service.staffIds(storeId);
+    }
+
+    @PostMapping("/post")
+    public StoreDTO createStore(@RequestBody StoreDTO dto) {
+        return service.createStore(dto);
+    }
+
+
 }

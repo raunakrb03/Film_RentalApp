@@ -119,4 +119,41 @@ public class StoreServiceImpl implements IStoreService {
             return d;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Integer> staffIds(int storeId) {
+        Store store = get(storeId);
+        return store.getStaff().stream()
+                .map(Staff::getStaffId)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public StoreDTO createStore(StoreDTO dto) {
+        Store store = new Store();
+        if (dto.getAddressId() != null) {
+            Address address = addressRepo.findById(dto.getAddressId())
+                    .orElseThrow(() -> new NotFoundException("Address not found"));
+            store.setAddress(address);
+        }
+        if (dto.getManagerStaffId() != null) {
+            Staff manager = staffRepo.findById(dto.getManagerStaffId())
+                    .orElseThrow(() -> new NotFoundException("Manager not found"));
+            store.setManagerStaff(manager);
+        }
+
+        // ✅ Set lastUpdate before saving
+        store.setLastUpdate(java.time.LocalDateTime.now());
+
+        repo.save(store);
+
+        StoreDTO response = new StoreDTO();
+        response.setStoreId(store.getStoreId());
+        response.setManagerStaffId(store.getManagerStaff() != null ? store.getManagerStaff().getStaffId() : null);
+        response.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
+        return response;
+
+    }
+
 }

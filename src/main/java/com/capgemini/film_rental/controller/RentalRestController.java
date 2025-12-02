@@ -4,8 +4,10 @@ package com.capgemini.film_rental.controller;
 import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.dto.RentalCreateDTO;
 import com.capgemini.film_rental.dto.RentalDTO;
+import com.capgemini.film_rental.dto.aggregates.UpdateReturnDateDTO;
 import com.capgemini.film_rental.entity.Rental;
 import com.capgemini.film_rental.service.IRentalService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,4 +62,21 @@ public class RentalRestController {
         List<FilmDTO> films = service.getTopTenFilmsByStore(storeId);
         return ResponseEntity.ok(films);
     }
+
+    @GetMapping("/due/store/{id}")
+    public ResponseEntity<List<RentalDTO>> getDueRentalsByStore(@PathVariable("id") int storeId) {
+        List<RentalDTO> dueRentals = service.getDueRentalsByStore(storeId);
+        return ResponseEntity.ok(dueRentals);
+    }
+
+
+    @PutMapping("/update/returndate/{id}")
+    public ResponseEntity<RentalDTO> updateReturnDate(
+            @PathVariable int id,
+            @Valid @RequestBody UpdateReturnDateDTO dto) {
+        RentalDTO updatedRental = service.updateReturnDate(id, dto.getReturnDateIso());
+        return ResponseEntity.ok(updatedRental);
+    }
+
+
 }

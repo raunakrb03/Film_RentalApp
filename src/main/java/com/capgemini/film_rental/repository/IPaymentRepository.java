@@ -19,4 +19,17 @@ public interface IPaymentRepository extends JpaRepository<Payment,Integer> {
 
     @Query("select cast(p.paymentDate as date), sum(p.amount) from Payment p join p.rental r where r.staff.store.storeId = :storeId group by cast(p.paymentDate as date) order by cast(p.paymentDate as date)")
     List<Object[]> revenueByDateForStore(@Param("storeId") int storeId);
+
+
+    @Query("""
+    SELECT f.filmId, SUM(p.amount)
+    FROM Payment p
+    JOIN p.rental r
+    JOIN r.inventory i
+    JOIN i.film f
+    WHERE f.filmId = :filmId
+    GROUP BY f.filmId
+""")
+    List<Object[]> revenueForFilm(@Param("filmId") int filmId);
+
 }

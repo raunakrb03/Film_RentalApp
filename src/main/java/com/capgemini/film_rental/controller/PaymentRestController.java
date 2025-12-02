@@ -46,4 +46,10 @@ public class PaymentRestController {
     public List<FilmRevenueDTO> revenueAllFilmsAcrossStores() {
         return service.cumulativeRevenueOfAllFilmsAcrossStores();
     }
+
+    @GetMapping("/revenue/film/{id}")
+    public List<FilmRevenueDTO> revenueForFilm(@PathVariable int id) {
+        return service.cumulativeRevenueForFilm(id);
+    }
+
 }

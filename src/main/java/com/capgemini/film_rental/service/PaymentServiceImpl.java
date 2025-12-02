@@ -71,4 +71,12 @@ public class PaymentServiceImpl implements IPaymentService {
                 .map(arr -> new StoreRevenueByDateDTO(storeId, ((java.sql.Date) arr[0]).toLocalDate(), (BigDecimal) arr[1]))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<FilmRevenueDTO> cumulativeRevenueForFilm(int filmId) {
+        return repo.revenueForFilm(filmId).stream()
+                .map(arr -> new FilmRevenueDTO(((Number) arr[0]).intValue(), (BigDecimal) arr[1]))
+                .collect(Collectors.toList());
+    }
+
 }

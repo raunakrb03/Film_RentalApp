@@ -10,5 +10,10 @@ import java.util.List;
 public interface IRentalRepository extends JpaRepository<Rental,Integer>{
     @Query("select r.inventory.film.filmId from Rental r where r.customer.customerId = :customerId")
     List<Integer> filmsRentedToCustomer(@Param("customerId") int customerId);
+
+
+    @Query("SELECT r FROM Rental r WHERE r.inventory.store.storeId = :storeId AND r.returnDate IS NULL")
+    List<Rental> findDueRentalsByStore(@Param("storeId") int storeId);
+
 }
 

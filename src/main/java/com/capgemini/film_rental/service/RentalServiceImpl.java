@@ -202,4 +202,31 @@ public class RentalServiceImpl implements IRentalService {
 
         return films;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RentalDTO> getDueRentalsByStore(int storeId) {
+        String jpql = """
+        SELECT r FROM Rental r
+        JOIN r.inventory i
+        JOIN i.store s
+        WHERE s.storeId = :storeId AND r.returnDate IS NULL
+    """;
+
+        List<Rental> rentals = entityManager.createQuery(jpql, Rental.class)
+                .setParameter("storeId", storeId)
+                .getResultList();
+
+        return rentals.stream().map(r -> {
+            RentalDTO dto = new RentalDTO();
+            dto.setRentalId(r.getRentalId());
+            dto.setRentalDate(r.getRentalDate());
+            dto.setReturnDate(r.getReturnDate());
+            dto.setInventoryId(r.getInventory().getInventoryId());
+            dto.setCustomerId(r.getCustomer().getCustomerId());
+            dto.setStaffId(r.getStaff().getStaffId());
+            return dto;
+        }).toList();
+    }
+
 }

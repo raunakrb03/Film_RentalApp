@@ -65,4 +65,16 @@ public class InventoryServiceImpl implements IInventoryService {
             ((Number) row[3]).longValue()
         )).collect(Collectors.toList());
     }
+
+    @Override
+    public List<FilmInventoryByStoreDTO> inventoryOfFilmAcrossStores(int filmId) {
+        List<Object[]> results = repo.inventoryFilmAcrossStores(filmId);
+        return results.stream()
+                .map(row -> new FilmInventoryByStoreDTO(
+                        ((Number) row[0]).intValue(),  // storeId
+                        ((Number) row[1]).longValue()  // inventoryCount
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

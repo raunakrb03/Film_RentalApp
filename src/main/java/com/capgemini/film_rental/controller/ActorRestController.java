@@ -1,5 +1,6 @@
 package com.capgemini.film_rental.controller;
 
+import com.capgemini.film_rental.dto.ActorCreateDTO;
 import com.capgemini.film_rental.dto.ActorDTO;
 import com.capgemini.film_rental.dto.ActorWithFilmCountDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,6 +21,19 @@ public class ActorRestController {
     IActorService actorService;
 
     // ...existing code...
+
+    /**
+     * POST /api/actors/post
+     * Add new actor object in DB
+     *
+     * @param dto the actor creation DTO with firstName and lastName
+     * @return success message "Record Created Successfully"
+     */
+    @PostMapping("/post")
+    public String createActor(@Valid @RequestBody ActorCreateDTO dto) {
+        return actorService.createActor(dto);
+    }
+
     @PutMapping("/update/firstname/{id}")
     public ResponseEntity<ActorDTO> updateFirstName(@PathVariable int id, @RequestParam String firstName) {
         var updated = actorService.updateFirstName(id, firstName);

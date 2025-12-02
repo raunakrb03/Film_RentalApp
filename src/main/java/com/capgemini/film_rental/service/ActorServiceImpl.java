@@ -1,6 +1,7 @@
 // src/main/java/com/capgemini/film_rental/service/ActorServiceImpl.java
 package com.capgemini.film_rental.service;
 
+import com.capgemini.film_rental.dto.ActorCreateDTO;
 import com.capgemini.film_rental.dto.ActorWithFilmCountDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.entity.Actor;
@@ -98,5 +99,14 @@ public class ActorServiceImpl implements IActorService{
         return films.stream()
                 .map(FilmMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String createActor(ActorCreateDTO dto) {
+        Actor actor = new Actor();
+        actor.setFirstName(dto.getFirstName());
+        actor.setLastName(dto.getLastName());
+        actorRepository.save(actor);
+        return "Record Created Successfully";
     }
 }

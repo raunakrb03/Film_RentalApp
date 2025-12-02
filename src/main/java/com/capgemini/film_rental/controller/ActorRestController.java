@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("api/actors")
@@ -35,12 +36,6 @@ public class ActorRestController {
     @PutMapping("/update/firstname/{id}")
     public ResponseEntity<ActorDTO> updateFirstName(@PathVariable int id, @RequestParam String firstName) {
         var updated = actorService.updateFirstName(id, firstName);
-        return ResponseEntity.ok(ActorMapper.toDTO(updated));
-    }
-
-    @PutMapping("/update/lastname/{id}")
-    public ResponseEntity<ActorDTO> updateLastName(@PathVariable int id, @RequestParam String lastName) {
-        var updated = actorService.updateLastName(id, lastName);
         return ResponseEntity.ok(ActorMapper.toDTO(updated));
     }
 
@@ -87,15 +82,19 @@ public class ActorRestController {
     }
 
     /**
-     * GET /api/actors/{id}/films
-     * Get all films for a given actor
+     * PUT /api/actors/{id}/film/{filmId}
+     * Assign a single film to an actor by film id
      *
-     * @param id actor id
-     * @return list of FilmDTO
+     * @param id the actor ID
+     * @param filmId the film ID to assign
+     * @return the assigned film as FilmDTO or 404 if not assigned
      */
-    @GetMapping("/{id}/films")
-    public ResponseEntity<List<FilmDTO>> getFilmsByActorId(@PathVariable int id) {
-        List<FilmDTO> films = actorService.getFilmsOfActor(id);
-        return ResponseEntity.ok(films);
+    @PutMapping("/{id}/film/{filmId}")
+    public ResponseEntity<FilmDTO> assignFilmToActor(@PathVariable int id, @PathVariable int filmId) {
+        List<FilmDTO> films = actorService.assignFilmsToActor(id, Collections.singletonList(filmId));
+        if (films == null || films.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(films.get(0));
     }
 }

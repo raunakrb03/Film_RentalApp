@@ -57,6 +57,13 @@ public class ActorServiceImpl implements IActorService{
     }
 
     @Override
+    public Actor updateLastName(int actorId, String lastName) {
+        Actor actor = getActorById(actorId);
+        actor.setLastName(lastName);
+        return actorRepository.save(actor);
+    }
+
+    @Override
     public List<ActorWithFilmCountDTO> findTop10ByFilmCount() {
         List<Map<String, Object>> results = actorRepository.findTop10ByFilmCount();
         return results.stream().map(row -> new ActorWithFilmCountDTO(
@@ -113,5 +120,14 @@ public class ActorServiceImpl implements IActorService{
         actor.setLastName(dto.getLastName());
         actorRepository.save(actor);
         return "Record Created Successfully";
+    }
+
+    @Override
+    public List<FilmDTO> getFilmsOfActor(int actorId) {
+        Actor actor = getActorById(actorId);
+        List<Film> films = actor.getFilms();
+        return films.stream()
+                .map(FilmMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

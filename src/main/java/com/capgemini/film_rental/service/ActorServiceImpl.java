@@ -86,18 +86,14 @@ public class ActorServiceImpl implements IActorService{
 
     @Override
     public List<FilmDTO> assignFilmsToActor(int actorId, List<Integer> filmIds) {
-        // Get the actor
         Actor actor = getActorById(actorId);
 
-        // Get all films by IDs
         List<Film> films = filmRepository.findAllById(filmIds);
 
-        // Validate all films exist
         if (films.size() != filmIds.size()) {
             throw new EntityNotFoundException("One or more films do not exist");
         }
 
-        // Assign films to actor
         for (Film film : films) {
             if (!actor.getFilms().contains(film)) {
                 actor.getFilms().add(film);

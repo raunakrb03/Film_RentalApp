@@ -14,11 +14,16 @@ public interface IStaffRepository extends JpaRepository<Staff,Integer> {
     @Query("select s from Staff s where lower(s.address.city.country.country) = lower(:country)")
     List<Staff> findByCountry(@Param("country") String country);
 
-    @Query("select s from Staff s where lower(s.firstName) like lower(concat('%',:fn,'%'))")
+    // Use nested concat to avoid 3-arg concat (JPQL supports two-arg concat only)
+    @Query("select s from Staff s where lower(s.firstName) like lower(concat(concat('%',:fn), '%'))")
     List<Staff> findByFirstNameContainingIgnoreCase(@Param("fn") String fn);
 
-    @Query("select s from Staff s where lower(s.lastName) like lower(concat('%',:ln,'%'))")
-    List<Staff> findByLastNameContainingIgnoreCase(@Param("ln") String ln);
+
+
+    // Use nested concat to avoid 3-arg concat (JPQL supports two-arg concat only)
+    @Query("select s from Staff s where lower(s.lastName) like lower(concat(concat('%',:ln), '%'))")
+    List<Staff> findByLastName(@Param("ln") String ln);
+
 
     @Query("select s from Staff s where lower(s.email) = lower(:email)")
     List<Staff> findByEmail(@Param("email") String email);

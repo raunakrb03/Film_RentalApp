@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.StreamSupport.stream;
+
 @Service
 @Transactional
 public class StaffServiceImpl implements IStaffService {
@@ -99,10 +101,13 @@ public class StaffServiceImpl implements IStaffService {
         return staffRepo.findByFirstNameContainingIgnoreCase(fn).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
+
     @Override
     public java.util.List<StaffDTO> findByLastName(String ln) {
-        return staffRepo.findByLastNameContainingIgnoreCase(ln).stream().map(this::toDTO).collect(Collectors.toList());
+        return staffRepo.findByLastName(ln).stream().map(this::toDTO).collect(Collectors.toList());
     }
+
+
 
     @Override
     public java.util.List<StaffDTO> findByEmail(String email) {

@@ -161,11 +161,12 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public java.util.List<CustomerDTO> findByFirstName(String firstName) {
+    public CustomerDTO findByFirstName(String firstName) {
         return repo.findByFirstNameIgnoreCase(firstName)
                 .stream()
                 .map(this::toDTO)
-                .collect(Collectors.toList());
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Customer not found: " + firstName));
     }
 
     @Override
@@ -175,6 +176,9 @@ public class CustomerServiceImpl implements ICustomerService {
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
+
+
+
 
 
 }

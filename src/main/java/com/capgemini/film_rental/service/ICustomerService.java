@@ -32,7 +32,9 @@ public interface ICustomerService {
 
     java.util.List<CustomerDTO> findInactiveCustomers();
 
-    java.util.List<CustomerDTO> findByFirstName(String firstName);
+    CustomerDTO findByFirstName(String firstName);
 
     java.util.List<CustomerDTO> findByLastName(String lastName);
+
+
 }

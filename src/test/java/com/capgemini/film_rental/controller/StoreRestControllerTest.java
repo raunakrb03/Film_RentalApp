@@ -103,7 +103,7 @@ class StoreRestControllerTest {
     @Test
     void testManagersOverview() {
         StoreDTO.ManagerAndStoreView view = new StoreDTO.ManagerAndStoreView();
-        view.managerFirstName = "Alice";
+        view.managerFirstName ="Alice";
 
         when(storeService.managersOverview()).thenReturn(Arrays.asList(view));
 

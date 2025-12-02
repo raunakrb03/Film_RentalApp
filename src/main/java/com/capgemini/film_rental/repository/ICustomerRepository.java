@@ -20,5 +20,10 @@ public interface ICustomerRepository extends JpaRepository<Customer,Integer>{
     List<Customer> findByEmailIgnoreCase(String email);
 
     java.util.List<Customer> findByActiveFalse();
+
+    java.util.List<Customer> findByActiveTrue();
+
     java.util.List<Customer> findByFirstNameIgnoreCase(String firstName);
+
+    java.util.List<Customer> findByLastNameIgnoreCase(String lastName);
 }

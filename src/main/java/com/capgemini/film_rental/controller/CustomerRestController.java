@@ -63,8 +63,18 @@ public class CustomerRestController {
         return service.updateFirstName(id, fn);
     }
 
-
-    @PutMapping("/update/{id}/email")
+    /**
+     * PUT /api/customers/update/{id}/ln
+     * Update last name of customer
+     *
+     * @param id the customer ID
+     * @param ln the new last name
+     * @return updated customer as CustomerDTO
+     */
+    @PutMapping("/update/{id}/ln")
+    public CustomerDTO updateLastName(@PathVariable int id, @PathVariable String ln) {
+        return service.updateLastName(id, ln);
+    }
     public CustomerDTO updateEmail(@PathVariable int id, @RequestParam String email) {
         return service.updateEmail(id, email);
     }
@@ -74,9 +84,29 @@ public class CustomerRestController {
         return service.findInactiveCustomers();
     }
 
-    @GetMapping("/firstname/{fn}")
+    /**
+     * GET /api/customers/active
+     * Search all active customers
+     *
+     * @return collection of active customers as CustomerDTO
+     */
+    @GetMapping("/active")
+    public java.util.List<CustomerDTO> getActiveCustomers() {
+        return service.findActiveCustomers();
+    }
     public java.util.List<CustomerDTO> getCustomersByFirstName(@PathVariable String fn) {
         return service.findByFirstName(fn);
     }
 
+    /**
+     * GET /api/customers/lastname/{ln}
+     * Search customers by last name
+     *
+     * @param ln the last name to search for
+     * @return collection of customers with matching last name as CustomerDTO
+     */
+    @GetMapping("/lastname/{ln}")
+    public java.util.List<CustomerDTO> getCustomersByLastName(@PathVariable String ln) {
+        return service.findByLastName(ln);
+    }
 }

@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Collections;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
+
 @RequestMapping("api/actors")
 public class ActorRestController {
 
@@ -102,4 +104,5 @@ public class ActorRestController {
         var updated = actorService.updateLastName(id, lastName);
         return ResponseEntity.ok(ActorMapper.toDTO(updated));
     }
+
 }

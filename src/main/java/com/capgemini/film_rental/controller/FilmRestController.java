@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
+
 @RequestMapping("/api/films")
+
 @SuppressWarnings("unused")
 public class FilmRestController {
     private final IFilmService service;

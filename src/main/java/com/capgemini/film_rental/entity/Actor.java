@@ -102,4 +102,6 @@ public class Actor
             film.getActors().remove(this);
         }
     }
+    System.out.println("By City Test Executed");
+
 }

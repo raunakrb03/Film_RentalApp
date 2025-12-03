@@ -21,8 +21,12 @@ public interface IStaffRepository extends JpaRepository<Staff,Integer> {
 
 
     // Use nested concat to avoid 3-arg concat (JPQL supports two-arg concat only)
-    @Query("select s from Staff s where lower(s.lastName) like lower(concat(concat('%',:ln), '%'))")
-    List<Staff> findByLastName(@Param("ln") String ln);
+    //List<Staff> findByLastName(@Param("ln") String ln);
+   // @Query("SELECT s FROM Staff s WHERE LOWER(s.lastName) LIKE LOWER(CONCAT('%', :ln, '%'))")
+   //@Query("select s from Staff s where lower(s.lastName) like lower(concat(concat('%',:ln), '%'))")
+  // @Query("SELECT s FROM Staff s WHERE LOWER(s.lastName) LIKE LOWER(CONCAT('%', CONCAT(:ln, '%')))")
+   @Query(value = "SELECT * FROM staff s WHERE LOWER(s.last_name) LIKE LOWER(CONCAT('%', :ln, '%'))", nativeQuery = true)
+   List<Staff> findByLastNameContainingIgnoreCase(@Param("ln") String ln);
 
 
     @Query("select s from Staff s where lower(s.email) = lower(:email)")

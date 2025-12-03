@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Collections;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:4200")
 
 @RequestMapping("api/actors")
 public class ActorRestController {

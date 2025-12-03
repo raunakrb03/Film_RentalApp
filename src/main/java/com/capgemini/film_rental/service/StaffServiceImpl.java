@@ -104,7 +104,7 @@ public class StaffServiceImpl implements IStaffService {
 
     @Override
     public java.util.List<StaffDTO> findByLastName(String ln) {
-        return staffRepo.findByLastName(ln).stream().map(this::toDTO).collect(Collectors.toList());
+        return staffRepo.findByLastNameContainingIgnoreCase(ln).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
 

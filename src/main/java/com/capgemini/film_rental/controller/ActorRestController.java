@@ -102,6 +102,5 @@ public class ActorRestController {
         var updated = actorService.updateLastName(id, lastName);
         return ResponseEntity.ok(ActorMapper.toDTO(updated));
     }
-    System.out.println("Hello, World!");
 
 }

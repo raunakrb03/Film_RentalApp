@@ -2,6 +2,8 @@ package com.capgemini.film_rental.service;
 
 import com.capgemini.film_rental.dto.FilmCreateDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -60,5 +62,7 @@ public interface IFilmService {
     // Added: return all films as DTOs
     List<FilmDTO> findAll();
 
+    // New: paged findAll to support front-end pagination and faster initial responses
+    org.springframework.data.domain.Page<FilmDTO> findAll(Pageable pageable);
 
 }

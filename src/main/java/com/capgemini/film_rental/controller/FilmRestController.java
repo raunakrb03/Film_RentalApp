@@ -2,11 +2,15 @@ package com.capgemini.film_rental.controller;
 
 import com.capgemini.film_rental.dto.FilmCreateDTO;
 import com.capgemini.film_rental.dto.FilmDTO;
+import com.capgemini.film_rental.dto.PageResponse;
 import com.capgemini.film_rental.entity.enums.Rating;
 import com.capgemini.film_rental.service.IFilmService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -91,7 +95,6 @@ public class FilmRestController {
 
 
 
-
     @GetMapping("/category/{category}")
     public List<FilmDTO> byCategory(@PathVariable String category) {
         return service.findByCategory(category);
@@ -159,8 +162,21 @@ public class FilmRestController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<FilmDTO>> getAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<?> getAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+        // If page and size not provided, keep existing behavior and return all films (avoid breaking clients)
+        if (page == null || size == null) {
+            return ResponseEntity.ok(service.findAll());
+        }
+        // sanitize values
+        int p = Math.max(0, page);
+        int s = Math.max(1, size);
+        Pageable pageable = PageRequest.of(p, s);
+        Page<FilmDTO> pageResult = service.findAll(pageable);
+        var items = pageResult.getContent();
+        long total = pageResult.getTotalElements();
+        int totalPages = pageResult.getTotalPages();
+        PageResponse<FilmDTO> resp = new PageResponse<>(items, p, s, total, totalPages);
+        return ResponseEntity.ok(resp);
     }
 
 

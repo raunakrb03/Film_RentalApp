@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.cache.annotation.EnableCaching;
 
+@EnableCaching
 @SpringBootApplication
 public class FilmRentalApplication {
     private static final Logger logger = LoggerFactory.getLogger(FilmRentalApplication.class);

@@ -12,6 +12,10 @@ import com.capgemini.film_rental.mapper.FilmMapper;
 import com.capgemini.film_rental.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,6 +48,7 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public String create(FilmCreateDTO dto) {
         Film f = new Film();
         f.setTitle(dto.getTitle());
@@ -71,6 +76,7 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO updateCategory(int filmId, int categoryId) {
         Film f = getFilm(filmId);
         Category c = categoryRepo.findById(categoryId).orElseThrow(() -> new NotFoundException("Category not found"));
@@ -83,6 +89,7 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO updateLanguage(int filmId, int languageId) {
         Film f = getFilm(filmId);
         Language l = languageRepo.findById(languageId).orElseThrow(() -> new NotFoundException("Language not found"));
@@ -91,6 +98,7 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO updateReleaseYear(int filmId, int year) {
         Film f = getFilm(filmId);
         f.setReleaseYear(year);
@@ -98,6 +106,7 @@ public class FilmServiceImpl implements IFilmService {
     }
 
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO updateTitle(int filmId, String title) {
         Film f = getFilm(filmId);
         f.setTitle(title);
@@ -105,6 +114,7 @@ public class FilmServiceImpl implements IFilmService {
     }
 //praphul's
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO updateRating(int filmId, String rating) {
         Film f = getFilm(filmId);
         Rating r = Rating.valueOf(rating.replace("-", "_"));
@@ -112,6 +122,7 @@ public class FilmServiceImpl implements IFilmService {
         return FilmMapper.toDTO(filmRepo.save(f));
     }
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO addActor(int filmId, int actorId) {
         Film f = getFilm(filmId);
         Actor a = actorRepo.findById(actorId).orElseThrow(() -> new NotFoundException("Actor not found"));
@@ -155,6 +166,7 @@ public class FilmServiceImpl implements IFilmService {
 
     //end
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO updateRentalDuration(int filmId, int rentalDuration) {
         Film f = getFilm(filmId);
         f.setRentalDuration(rentalDuration);
@@ -210,6 +222,7 @@ public class FilmServiceImpl implements IFilmService {
 
 
     @Override
+    @CacheEvict(value = "films", allEntries = true)
     public FilmDTO updateRentalRate(int filmId, BigDecimal rate) {
         Film f = getFilm(filmId);
         f.setRentalRate(rate);
@@ -237,6 +250,12 @@ public class FilmServiceImpl implements IFilmService {
     @Override
     public List<FilmDTO> findAll() {
         return filmRepo.findAll().stream().map(FilmMapper::toDTO).collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    @Cacheable(value = "films", key = "#pageable.pageNumber + '_' + #pageable.pageSize")
+    public Page<FilmDTO> findAll(Pageable pageable) {
+        return filmRepo.findAll(pageable).map(FilmMapper::toDTO);
     }
 
 

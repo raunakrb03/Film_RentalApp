@@ -158,6 +158,10 @@ public class FilmRestController {
         return service.updateRentalRate(id, rate);
     }
 
+    @GetMapping("")
+    public ResponseEntity<List<FilmDTO>> getAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
 
 
 }

@@ -234,7 +234,10 @@ public class FilmServiceImpl implements IFilmService {
         return filmRepo.findByReleaseYear(year).stream().map(FilmMapper::toDTO).toList();
     }
 
-
+    @Override
+    public List<FilmDTO> findAll() {
+        return filmRepo.findAll().stream().map(FilmMapper::toDTO).collect(java.util.stream.Collectors.toList());
+    }
 
 
 

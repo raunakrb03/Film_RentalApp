@@ -57,5 +57,8 @@ public interface IFilmService {
     // Added: search films by exact release year
     List<FilmDTO> findByYear(int year);
 
+    // Added: return all films as DTOs
+    List<FilmDTO> findAll();
+
 
 }

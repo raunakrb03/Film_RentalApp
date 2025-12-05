@@ -78,5 +78,11 @@ public class RentalRestController {
         return ResponseEntity.ok(updatedRental);
     }
 
+    @GetMapping
+    public ResponseEntity<List<RentalDTO>> getAll() {
+        List<RentalDTO> rentals = service.getAll();
+        return ResponseEntity.ok(rentals);
+    }
 
 }
+

@@ -229,4 +229,19 @@ public class RentalServiceImpl implements IRentalService {
         }).toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<RentalDTO> getAll() {
+        return repo.findAll().stream().map(r -> {
+            RentalDTO dto = new RentalDTO();
+            dto.setRentalId(r.getRentalId());
+            dto.setRentalDate(r.getRentalDate());
+            dto.setReturnDate(r.getReturnDate());
+            dto.setInventoryId(r.getInventory().getInventoryId());
+            dto.setCustomerId(r.getCustomer().getCustomerId());
+            dto.setStaffId(r.getStaff().getStaffId());
+            return dto;
+        }).toList();
+    }
+
 }

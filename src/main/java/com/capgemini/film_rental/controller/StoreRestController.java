@@ -1,15 +1,28 @@
 package com.capgemini.film_rental.controller;
 
-
-
 import com.capgemini.film_rental.dto.StoreDTO;
 import com.capgemini.film_rental.service.IStoreService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Store REST Controller with Caffeine caching support
+ *
+ * Cached endpoints:
+ * - GET /api/store - Caches all stores for 10 minutes
+ * - GET /api/store/city/{city} - Caches stores by city for 10 minutes
+ * - GET /api/store/country/{country} - Caches stores by country for 10 minutes
+ * - GET /api/store/managers - Caches managers overview for 10 minutes
+ *
+ * Cache invalidation occurs on:
+ * - POST /api/store/post - Creates new store
+ * - PUT /api/store/{storeId}/address/{addressId} - Updates store address
+ * - PUT /api/store/update/{storeId}/{phone} - Updates store phone
+ */
 @RestController
 @RequestMapping("/api/store")
+@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 public class StoreRestController {
 
     private final IStoreService service;
@@ -63,5 +76,9 @@ public class StoreRestController {
         return service.createStore(dto);
     }
 
+    @GetMapping
+    public List<StoreDTO> getAll() {
+        return service.getAll();
+    }
 
 }

@@ -20,4 +20,5 @@ public interface IStoreService {
     List<StoreDTO.ManagerAndStoreView> managersOverview();
     List<Integer> staffIds(int storeId);
     StoreDTO createStore(StoreDTO dto);
+    List<StoreDTO> getAll();
 }

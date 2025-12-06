@@ -5,15 +5,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IActorRepository extends JpaRepository<Actor,Integer> {
 
-    @Query("SELECT a.actorId as actorId, a.firstName as firstName, a.lastName as lastName, COUNT(f) as filmCount " +
-           "FROM Actor a LEFT JOIN a.films f " +
-           "GROUP BY a.actorId, a.firstName, a.lastName " +
-           "ORDER BY filmCount DESC LIMIT 10")
-    List<Map<String, Object>> findTop10ByFilmCount();
+    // Use native SQL to compute top 10 actors by film count (JPQL doesn't support LIMIT)
+    @Query(value = "SELECT a.actor_id, a.first_name, a.last_name, COUNT(af.film_id) AS filmCount \n" +
+            "FROM actor a LEFT JOIN film_actor af ON a.actor_id = af.actor_id \n" +
+            "GROUP BY a.actor_id, a.first_name, a.last_name \n" +
+            "ORDER BY filmCount DESC \n" +
+            "LIMIT 10", nativeQuery = true)
+    List<Object[]> findTop10ByFilmCountNative();
 
     List<Actor> findByFirstNameContainingIgnoreCase(String firstName);
 

@@ -90,12 +90,12 @@ public class ActorServiceImpl implements IActorService{
 
     @Override
     public List<ActorWithFilmCountDTO> findTop10ByFilmCount() {
-        List<Map<String, Object>> results = actorRepository.findTop10ByFilmCount();
-        return results.stream().map(row -> new ActorWithFilmCountDTO(
-            ((Number) row.get("actorId")).intValue(),
-            (String) row.get("firstName"),
-            (String) row.get("lastName"),
-            ((Number) row.get("filmCount")).longValue()
+        List<Object[]> rows = actorRepository.findTop10ByFilmCountNative();
+        return rows.stream().map(row -> new ActorWithFilmCountDTO(
+            ((Number) row[0]).intValue(),
+            (String) row[1],
+            (String) row[2],
+            ((Number) row[3]).longValue()
         )).collect(Collectors.toList());
     }
 
@@ -125,7 +125,6 @@ public class ActorServiceImpl implements IActorService{
             }
         }
 
-        // Save the actor with assigned films
         actorRepository.save(actor);
 
         // Return the films as DTOs

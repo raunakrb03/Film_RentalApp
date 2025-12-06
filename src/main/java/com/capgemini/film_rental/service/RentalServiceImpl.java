@@ -13,6 +13,10 @@ import com.capgemini.film_rental.service.IRentalService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +45,7 @@ public class RentalServiceImpl implements IRentalService {
     private EntityManager entityManager;
 
     @Override
+    @CacheEvict(value = "rentals", allEntries = true)
     public String create(RentalCreateDTO dto) {
         Inventory inv = invRepo.findById(dto.getInventoryId()).orElseThrow(() -> new NotFoundException("Inventory not found"));
         Customer cust = custRepo.findById(dto.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer not found"));
@@ -60,6 +65,7 @@ public class RentalServiceImpl implements IRentalService {
     }
 
     @Override
+    @CacheEvict(value = "rentals", allEntries = true)
     public RentalDTO updateReturnDate(int rentalId, String returnDateIso) {
         Rental r = repo.findById(rentalId).orElseThrow(() -> new NotFoundException("Rental not found"));
         try {
@@ -231,17 +237,36 @@ public class RentalServiceImpl implements IRentalService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "rentals", key = "'all'")
     public List<RentalDTO> getAll() {
-        return repo.findAll().stream().map(r -> {
+        return repo.findAllWithAssociations().stream().map(r -> {
             RentalDTO dto = new RentalDTO();
             dto.setRentalId(r.getRentalId());
             dto.setRentalDate(r.getRentalDate());
             dto.setReturnDate(r.getReturnDate());
-            dto.setInventoryId(r.getInventory().getInventoryId());
-            dto.setCustomerId(r.getCustomer().getCustomerId());
-            dto.setStaffId(r.getStaff().getStaffId());
+            dto.setInventoryId(r.getInventory() != null ? r.getInventory().getInventoryId() : null);
+            dto.setCustomerId(r.getCustomer() != null ? r.getCustomer().getCustomerId() : null);
+            dto.setStaffId(r.getStaff() != null ? r.getStaff().getStaffId() : null);
             return dto;
         }).toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "rentals", key = "#pageable.pageNumber + '_' + #pageable.pageSize")
+    public Page<RentalDTO> getAll(Pageable pageable) {
+        Page<Rental> page = repo.findAllWithAssociations(pageable);
+        return page.map(r -> {
+            RentalDTO dto = new RentalDTO();
+            dto.setRentalId(r.getRentalId());
+            dto.setRentalDate(r.getRentalDate());
+            dto.setReturnDate(r.getReturnDate());
+            dto.setInventoryId(r.getInventory() != null ? r.getInventory().getInventoryId() : null);
+            dto.setCustomerId(r.getCustomer() != null ? r.getCustomer().getCustomerId() : null);
+            dto.setStaffId(r.getStaff() != null ? r.getStaff().getStaffId() : null);
+            return dto;
+        });
+    }
+
 }
+

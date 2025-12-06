@@ -1,6 +1,8 @@
 package com.capgemini.film_rental.repository;
 
 import com.capgemini.film_rental.entity.Rental;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +20,10 @@ public interface IRentalRepository extends JpaRepository<Rental,Integer>{
     // Added: fetch associations to avoid LazyInitializationException when mapping to DTOs
     @Query("SELECT r FROM Rental r LEFT JOIN FETCH r.inventory i LEFT JOIN FETCH r.customer c LEFT JOIN FETCH r.staff s")
     List<Rental> findAllWithAssociations();
+
+    // Paged variant: use DISTINCT fetch join and a count query so paging works
+    @Query(value = "SELECT DISTINCT r FROM Rental r LEFT JOIN FETCH r.inventory i LEFT JOIN FETCH r.customer c LEFT JOIN FETCH r.staff s",
+           countQuery = "SELECT COUNT(r) FROM Rental r")
+    Page<Rental> findAllWithAssociations(Pageable pageable);
 
 }

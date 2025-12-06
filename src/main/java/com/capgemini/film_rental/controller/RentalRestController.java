@@ -1,15 +1,16 @@
-
 package com.capgemini.film_rental.controller;
 
 import com.capgemini.film_rental.dto.FilmDTO;
 import com.capgemini.film_rental.dto.RentalCreateDTO;
 import com.capgemini.film_rental.dto.RentalDTO;
+import com.capgemini.film_rental.dto.PageResponse;
 import com.capgemini.film_rental.dto.aggregates.UpdateReturnDateDTO;
-import com.capgemini.film_rental.entity.Rental;
 import com.capgemini.film_rental.service.IRentalService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,10 +79,22 @@ public class RentalRestController {
         return ResponseEntity.ok(updatedRental);
     }
 
-    @GetMapping
-    public ResponseEntity<List<RentalDTO>> getAll() {
-        List<RentalDTO> rentals = service.getAll();
-        return ResponseEntity.ok(rentals);
+    /**
+     * GET /api/rental/getAll
+     * Supports optional paging: ?page=0&size=20
+     */
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+        if (page == null || size == null) {
+            List<RentalDTO> rentals = service.getAll();
+            return ResponseEntity.ok(rentals);
+        }
+        int p = Math.max(0, page);
+        int s = Math.max(1, size);
+        Pageable pageable = PageRequest.of(p, s);
+        Page<RentalDTO> pageResult = service.getAll(pageable);
+        PageResponse<RentalDTO> resp = PageResponse.fromPage(pageResult);
+        return ResponseEntity.ok(resp);
     }
 
 }

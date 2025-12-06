@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Collections;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import com.capgemini.film_rental.dto.PageResponse;
 
 @RestController
 @CrossOrigin("*")
@@ -33,6 +37,29 @@ public class ActorRestController {
     @PostMapping("/post")
     public String createActor(@Valid @RequestBody ActorCreateDTO dto) {
         return actorService.createActor(dto);
+    }
+
+    /**
+     * GET /api/actors
+     * Return all actors as ActorDTO for frontend consumption
+     * Supports optional paging: ?page=&size=
+     */
+    @GetMapping("")
+    public ResponseEntity<?> getAllActors(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+        if (page == null || size == null) {
+            var actors = actorService.getAllActors();
+            var dtos = actors.stream().map(ActorMapper::toDTO).toList();
+            return ResponseEntity.ok(dtos);
+        }
+        int p = Math.max(0, page);
+        int s = Math.max(1, size);
+        Pageable pageable = PageRequest.of(p, s);
+        Page<com.capgemini.film_rental.dto.ActorDTO> pageResult = actorService.findAll(pageable);
+        var items = pageResult.getContent();
+        long total = pageResult.getTotalElements();
+        int totalPages = pageResult.getTotalPages();
+        PageResponse<com.capgemini.film_rental.dto.ActorDTO> resp = new PageResponse<>(items, p, s, total, totalPages);
+        return ResponseEntity.ok(resp);
     }
 
     @PutMapping("/update/firstname/{id}")
@@ -104,5 +131,4 @@ public class ActorRestController {
         var updated = actorService.updateLastName(id, lastName);
         return ResponseEntity.ok(ActorMapper.toDTO(updated));
     }
-
 }

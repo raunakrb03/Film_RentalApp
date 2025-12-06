@@ -18,4 +18,8 @@ public interface IActorRepository extends JpaRepository<Actor,Integer> {
     List<Actor> findByFirstNameContainingIgnoreCase(String firstName);
 
     List<Actor> findByLastNameContainingIgnoreCase(String lastName);
+
+    // Projection-based paged query to return only the fields needed by the UI and avoid loading entities
+    @Query("SELECT new com.capgemini.film_rental.dto.ActorDTO(a.actorId, a.firstName, a.lastName) FROM Actor a")
+    org.springframework.data.domain.Page<com.capgemini.film_rental.dto.ActorDTO> findAllProjected(org.springframework.data.domain.Pageable pageable);
 }

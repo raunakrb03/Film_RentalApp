@@ -1,5 +1,6 @@
 package com.capgemini.film_rental.service;
 
+import com.capgemini.film_rental.dto.PageResponse;
 import com.capgemini.film_rental.dto.StoreDTO;
 import com.capgemini.film_rental.entity.Address;
 import com.capgemini.film_rental.entity.Customer;
@@ -9,6 +10,10 @@ import com.capgemini.film_rental.exception.NotFoundException;
 import com.capgemini.film_rental.repository.IAddressRepository;
 import com.capgemini.film_rental.repository.IStoreRepository;
 import com.capgemini.film_rental.repository.IStaffRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +59,7 @@ public class StoreServiceImpl implements IStoreService {
     }
 
     @Override
+    @Cacheable(value = "storesByCity", key = "#city")
     public List<StoreDTO> findByCity(String city) {
         return repo.findByAddress_City_CityIgnoreCase(city).stream().map(s -> {
             StoreDTO d = new StoreDTO();
@@ -65,6 +71,7 @@ public class StoreServiceImpl implements IStoreService {
     }
 
     @Override
+    @CacheEvict(value = {"stores", "storesByCity", "storesByCountry", "managersOverview"}, allEntries = true)
     public StoreDTO assignAddress(int storeId, int addressId) {
         Store s = get(storeId);
         Address a = addressRepo.findById(addressId).orElseThrow(() -> new NotFoundException("Address not found"));
@@ -78,6 +85,7 @@ public class StoreServiceImpl implements IStoreService {
     }
 
     @Override
+    @CacheEvict(value = {"stores", "managersOverview"}, allEntries = true)
     public StoreDTO updatePhone(int storeId, String phone) {
         Store s = get(storeId);
         Address a = s.getAddress();
@@ -92,6 +100,7 @@ public class StoreServiceImpl implements IStoreService {
     }
 
     @Override
+    @Cacheable(value = "managersOverview")
     public List<StoreDTO.ManagerAndStoreView> managersOverview() {
         return repo.findAll().stream().map(s -> {
             StoreDTO.ManagerAndStoreView v = new StoreDTO.ManagerAndStoreView();
@@ -110,6 +119,7 @@ public class StoreServiceImpl implements IStoreService {
     }
 
     @Override
+    @Cacheable(value = "storesByCountry", key = "#country")
     public List<StoreDTO> findByCountry(String country) {
         return repo.findByCountry(country).stream().map(s -> {
             StoreDTO d = new StoreDTO();
@@ -130,6 +140,7 @@ public class StoreServiceImpl implements IStoreService {
 
 
     @Override
+    @CacheEvict(value = {"stores", "managersOverview"}, allEntries = true)
     public StoreDTO createStore(StoreDTO dto) {
         Store store = new Store();
         if (dto.getAddressId() != null) {
@@ -157,33 +168,29 @@ public class StoreServiceImpl implements IStoreService {
     }
 
     @Override
-    public StoreDTO findByPhone(String phone) {
-        if (phone == null || phone.trim().isEmpty()) {
-            throw new IllegalArgumentException("Phone number cannot be null or empty");
-        }
-        List<Store> stores = repo.findByAddress_Phone(phone);
-        if (stores == null || stores.isEmpty()) {
-            throw new NotFoundException("Store not found with phone: " + phone);
-        }
-        Store store = stores.get(0);
-        StoreDTO d = new StoreDTO();
-        d.setStoreId(store.getStoreId());
-        d.setManagerStaffId(store.getManagerStaff() != null ? store.getManagerStaff().getStaffId() : null);
-        d.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
-        return d;
+    @Cacheable(value = "stores")
+    public List<StoreDTO> getAll() {
+        return repo.findAll().stream().map(s -> {
+            StoreDTO d = new StoreDTO();
+            d.setStoreId(s.getStoreId());
+            d.setManagerStaffId(s.getManagerStaff() != null ? s.getManagerStaff().getStaffId() : null);
+            d.setAddressId(s.getAddress() != null ? s.getAddress().getAddressId() : null);
+            return d;
+        }).collect(Collectors.toList());
     }
 
     @Override
-    public StoreDTO assignManager(int storeId, int managerStaffId) {
-        Store store = get(storeId);
-        Staff manager = staffRepo.findById(managerStaffId)
-                .orElseThrow(() -> new NotFoundException("Manager Staff not found with ID: " + managerStaffId));
-        store.setManagerStaff(manager);
-        store = repo.save(store);
-        StoreDTO d = new StoreDTO();
-        d.setStoreId(store.getStoreId());
-        d.setManagerStaffId(store.getManagerStaff() != null ? store.getManagerStaff().getStaffId() : null);
-        d.setAddressId(store.getAddress() != null ? store.getAddress().getAddressId() : null);
-        return d;
+    @Cacheable(value = "stores", key = "#pageable.pageNumber + '_' + #pageable.pageSize")
+    public PageResponse<StoreDTO> findAllPaged(Pageable pageable) {
+        Page<Store> page = repo.findAll(pageable);
+        Page<StoreDTO> dtoPage = page.map(s -> {
+            StoreDTO d = new StoreDTO();
+            d.setStoreId(s.getStoreId());
+            d.setManagerStaffId(s.getManagerStaff() != null ? s.getManagerStaff().getStaffId() : null);
+            d.setAddressId(s.getAddress() != null ? s.getAddress().getAddressId() : null);
+            return d;
+        });
+        return PageResponse.fromPage(dtoPage);
     }
+
 }

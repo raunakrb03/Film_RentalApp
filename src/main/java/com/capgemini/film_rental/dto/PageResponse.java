@@ -1,6 +1,7 @@
 package com.capgemini.film_rental.dto;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public class PageResponse<T> {
     private List<T> items;
@@ -17,6 +18,11 @@ public class PageResponse<T> {
         this.size = size;
         this.totalElements = totalElements;
         this.totalPages = totalPages;
+    }
+
+    // Factory to build from Spring Page
+    public static <T> PageResponse<T> fromPage(Page<T> page) {
+        return new PageResponse<>(page.getContent(), page.getNumber(), page.getSize(), page.getTotalElements(), page.getTotalPages());
     }
 
     public List<T> getItems() {
@@ -59,4 +65,3 @@ public class PageResponse<T> {
         this.totalPages = totalPages;
     }
 }
-

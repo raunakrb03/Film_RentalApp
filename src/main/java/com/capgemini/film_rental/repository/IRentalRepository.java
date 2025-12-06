@@ -15,5 +15,8 @@ public interface IRentalRepository extends JpaRepository<Rental,Integer>{
     @Query("SELECT r FROM Rental r WHERE r.inventory.store.storeId = :storeId AND r.returnDate IS NULL")
     List<Rental> findDueRentalsByStore(@Param("storeId") int storeId);
 
-}
+    // Added: fetch associations to avoid LazyInitializationException when mapping to DTOs
+    @Query("SELECT r FROM Rental r LEFT JOIN FETCH r.inventory i LEFT JOIN FETCH r.customer c LEFT JOIN FETCH r.staff s")
+    List<Rental> findAllWithAssociations();
 
+}

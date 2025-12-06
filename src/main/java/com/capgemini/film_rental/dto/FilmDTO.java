@@ -1,4 +1,3 @@
-
 package com.capgemini.film_rental.dto;
 
 import java.math.BigDecimal;
@@ -21,6 +20,10 @@ public class FilmDTO {
     private LocalDateTime lastUpdate;
     private List<Integer> categoryIds;
     private List<Integer> actorIds;
+    // New fields: provide friendly names to the frontend while keeping IDs for compatibility
+    private List<String> categoryNames;
+    private String languageName;
+    private String originalLanguageName;
 
     public int getFilmId() {
         return filmId;
@@ -140,6 +143,30 @@ public class FilmDTO {
 
     public void setActorIds(List<Integer> v) {
         this.actorIds = v;
+    }
+
+    public List<String> getCategoryNames() {
+        return categoryNames;
+    }
+
+    public void setCategoryNames(List<String> categoryNames) {
+        this.categoryNames = categoryNames;
+    }
+
+    public String getLanguageName() {
+        return languageName;
+    }
+
+    public void setLanguageName(String languageName) {
+        this.languageName = languageName;
+    }
+
+    public String getOriginalLanguageName() {
+        return originalLanguageName;
+    }
+
+    public void setOriginalLanguageName(String originalLanguageName) {
+        this.originalLanguageName = originalLanguageName;
     }
 
     public void setRentalCount(Long count) {

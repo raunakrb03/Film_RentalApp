@@ -91,10 +91,6 @@ public class FilmRestController {
         return service.countFilmsByYear();
     }
 
-
-
-
-
     @GetMapping("/category/{category}")
     public List<FilmDTO> byCategory(@PathVariable String category) {
         return service.findByCategory(category);
@@ -105,6 +101,26 @@ public class FilmRestController {
         return service.findActorsOfFilm(id);
     }
 
+    // New: return a single film by id with category names and language names
+    @GetMapping("/{id}")
+    public ResponseEntity<FilmDTO> getById(@PathVariable int id) {
+        FilmDTO dto = service.findById(id);
+        return ResponseEntity.ok(dto);
+    }
+
+    // New: update whole film (partial-null-safe update). Frontend can call this to set multiple fields at once.
+    @PutMapping("/{id}/whole")
+    public ResponseEntity<FilmDTO> updateWhole(@PathVariable int id, @RequestBody FilmCreateDTO dto) {
+        FilmDTO updated = service.updateWhole(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    // Alias: support the common REST pattern PUT /api/films/{id} so frontend update buttons work without changing client code
+    @PutMapping("/{id}")
+    public ResponseEntity<FilmDTO> updateWholeAlias(@PathVariable int id, @RequestBody FilmCreateDTO dto) {
+        FilmDTO updated = service.updateWhole(id, dto);
+        return ResponseEntity.ok(updated);
+    }
 
     @GetMapping("/rating/lt/{rating}")
     public List<FilmDTO> ratingLT(@PathVariable String rating) {
@@ -178,6 +194,4 @@ public class FilmRestController {
         PageResponse<FilmDTO> resp = new PageResponse<>(items, p, s, total, totalPages);
         return ResponseEntity.ok(resp);
     }
-
-
 }

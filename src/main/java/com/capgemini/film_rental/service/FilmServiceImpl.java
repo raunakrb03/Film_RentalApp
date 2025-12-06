@@ -258,6 +258,52 @@ public class FilmServiceImpl implements IFilmService {
         return filmRepo.findAll(pageable).map(FilmMapper::toDTO);
     }
 
+    @Override
+    public FilmDTO findById(int filmId) {
+        Film f = getFilm(filmId);
+        return FilmMapper.toDTO(f);
+    }
 
+    @Override
+    @org.springframework.cache.annotation.CacheEvict(value = "films", allEntries = true)
+    public FilmDTO updateWhole(int filmId, com.capgemini.film_rental.dto.FilmCreateDTO dto) {
+        Film film = getFilm(filmId);
+
+        // Update scalar fields if provided (null means untouched)
+        if (dto.getTitle() != null) film.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) film.setDescription(dto.getDescription());
+        if (dto.getReleaseYear() != null) film.setReleaseYear(dto.getReleaseYear());
+        if (dto.getRentalDuration() != null) film.setRentalDuration(dto.getRentalDuration());
+        if (dto.getRentalRate() != null) film.setRentalRate(dto.getRentalRate());
+        if (dto.getLength() != null) film.setLength(dto.getLength());
+        if (dto.getReplacementCost() != null) film.setReplacementCost(dto.getReplacementCost());
+        if (dto.getRating() != null) {
+            film.setRating(com.capgemini.film_rental.entity.enums.Rating.valueOf(dto.getRating().replace("-","_")));
+        }
+        if (dto.getSpecialFeatures() != null) film.setSpecialFeatures(dto.getSpecialFeatures());
+
+        // Update language associations
+        if (dto.getLanguageId() != null) {
+            Language l = languageRepo.findById(dto.getLanguageId()).orElseThrow(() -> new NotFoundException("Language not found"));
+            film.setLanguage(l);
+        }
+        if (dto.getOriginalLanguageId() != null) {
+            Language ol = languageRepo.findById(dto.getOriginalLanguageId()).orElseThrow(() -> new NotFoundException("Original language not found"));
+            film.setOriginalLanguage(ol);
+        }
+
+        // Replace categories if a list was provided (empty list will clear categories)
+        if (dto.getCategoryIds() != null) {
+            film.setCategories(categoryRepo.findAllById(dto.getCategoryIds()));
+        }
+
+        // Replace actors if a list was provided
+        if (dto.getActorIds() != null) {
+            film.setActors(actorRepo.findAllById(dto.getActorIds()));
+        }
+
+        Film saved = filmRepo.save(film);
+        return FilmMapper.toDTO(saved);
+    }
 
 }

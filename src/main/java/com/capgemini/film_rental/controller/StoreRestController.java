@@ -1,23 +1,34 @@
 package com.capgemini.film_rental.controller;
 
-
-
+import com.capgemini.film_rental.dto.PageResponse;
 import com.capgemini.film_rental.dto.StoreDTO;
-import com.capgemini.film_rental.exception.NotFoundException;
 import com.capgemini.film_rental.service.IStoreService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Store REST Controller with Caffeine caching support
+ *
+ * Cached endpoints:
+ * - GET /api/store - Caches all stores for 10 minutes
+ * - GET /api/store/city/{city} - Caches stores by city for 10 minutes
+ * - GET /api/store/country/{country} - Caches stores by country for 10 minutes
+ * - GET /api/store/managers - Caches managers overview for 10 minutes
+ *
+ * Cache invalidation occurs on:
+ * - POST /api/store/post - Creates new store
+ * - PUT /api/store/{storeId}/address/{addressId} - Updates store address
+ * - PUT /api/store/update/{storeId}/{phone} - Updates store phone
+ */
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/store")
+@CrossOrigin(origins = {"http://localhost:4200", "https://localhost:4200"})
 public class StoreRestController {
 
     private final IStoreService service;
-
 
     public StoreRestController(IStoreService service) {
         this.service = service;
@@ -68,29 +79,15 @@ public class StoreRestController {
         return service.createStore(dto);
     }
 
-    @GetMapping("/phone/{phone}")
-    public ResponseEntity<StoreDTO> getStoreByPhone(@PathVariable String phone) {
-        try {
-            StoreDTO storeDTO = service.findByPhone(phone);
-            return ResponseEntity.ok(storeDTO);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null); // or custom error response
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @GetMapping
+    public List<StoreDTO> getAll() {
+        return service.getAll();
     }
 
-    /**
-     * PUT /api/store/{storeId}/manager/{manager_staff_id}
-     * Assign manager to a store
-     *
-     * @param storeId the store ID
-     * @param manager_staff_id the staff ID to assign as manager
-     * @return updated store as StoreDTO with address details
-     */
-    @PutMapping("/{storeId}/manager/{manager_staff_id}")
-    public StoreDTO assignManager(@PathVariable int storeId, @PathVariable int manager_staff_id) {
-        return service.assignManager(storeId, manager_staff_id);
+    // New paged endpoint for frontend performance
+    @GetMapping("/paged")
+    public PageResponse<StoreDTO> getPaged(@PageableDefault(size = 20) Pageable pageable) {
+        return service.findAllPaged(pageable);
     }
 
 }

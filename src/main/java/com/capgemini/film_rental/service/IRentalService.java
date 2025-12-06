@@ -15,4 +15,5 @@ public interface IRentalService {
     List<FilmDTO> getTopTenFilmsByStore(Integer storeId);
     List<FilmDTO> getTopTenMostRentedFilms();
     List<RentalDTO> getDueRentalsByStore(int storeId);
+    List<RentalDTO> getAll();
 }

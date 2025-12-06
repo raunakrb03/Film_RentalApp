@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 import java.util.Objects;
  
 import com.fasterxml.jackson.annotation.JsonIgnore;
- 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +21,8 @@ import jakarta.persistence.Table;
 @Table(name = "rental",indexes = {
         @Index(name = "idx_rental_date", columnList = "rental_date")
     })
-public class Rental 
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+public class Rental
 {
  
     @Id
@@ -34,7 +37,7 @@ public class Rental
     
     
     //Multiple Rental -> 1 inventory
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "inventory_id", nullable = false,columnDefinition = "MEDIUMINT UNSIGNED")
     private Inventory inventory;
@@ -42,7 +45,7 @@ public class Rental
     
     
     //Multiple Rental -> 1 customer
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "customer_id", nullable = false,columnDefinition = "SMALLINT UNSIGNED")
     private Customer customer;
@@ -53,7 +56,7 @@ public class Rental
     
 
     //Multiple Rental -> 1 staff
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "staff_id", nullable = false,columnDefinition = "TINYINT UNSIGNED")
     private Staff staff;

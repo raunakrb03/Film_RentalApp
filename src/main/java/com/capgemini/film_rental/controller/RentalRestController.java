@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
-
 @RequestMapping("/api/rental")
 public class RentalRestController {
 
@@ -80,11 +78,10 @@ public class RentalRestController {
         return ResponseEntity.ok(updatedRental);
     }
 
-
-//    @PostMapping("/add/create")
-//    public ResponseEntity<String> createRental(@Valid @RequestBody RentalCreateDTO dto) {
-//        String message = service.create(dto);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(message);
-//    }
+    @GetMapping
+    public ResponseEntity<List<RentalDTO>> getAll() {
+        List<RentalDTO> rentals = service.getAll();
+        return ResponseEntity.ok(rentals);
+    }
 
 }

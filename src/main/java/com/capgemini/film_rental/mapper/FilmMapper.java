@@ -16,6 +16,9 @@ public class FilmMapper {
 
         dto.setLanguageId(film.getLanguage() != null ? film.getLanguage().getLanguageId() : null);
         dto.setOriginalLanguageId(film.getOriginalLanguage() != null ? film.getOriginalLanguage().getLanguageId() : null);
+        // set friendly language names for frontend convenience
+        dto.setLanguageName(film.getLanguage() != null ? film.getLanguage().getName() : null);
+        dto.setOriginalLanguageName(film.getOriginalLanguage() != null ? film.getOriginalLanguage().getName() : null);
 
         dto.setRentalDuration(film.getRentalDuration());
         dto.setRentalRate(film.getRentalRate());
@@ -34,6 +37,12 @@ public class FilmMapper {
         dto.setActorIds(film.getActors() == null ? null :
                 film.getActors().stream()
                         .map(a -> a.getActorId())
+                        .collect(Collectors.toList()));
+
+        // populate category names list for frontend
+        dto.setCategoryNames(film.getCategories() == null ? null :
+                film.getCategories().stream()
+                        .map(c -> c.getName())
                         .collect(Collectors.toList()));
 
         return dto;

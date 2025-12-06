@@ -1,10 +1,18 @@
-
 package com.capgemini.film_rental.dto;
 
 public class ActorDTO {
     private int actorId;
     private String firstName;
     private String lastName;
+
+    public ActorDTO() {}
+
+    // Projection constructor used by JPA queries: new com.capgemini.film_rental.dto.ActorDTO(id, first, last)
+    public ActorDTO(int actorId, String firstName, String lastName) {
+        this.actorId = actorId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public int getActorId() {
         return actorId;

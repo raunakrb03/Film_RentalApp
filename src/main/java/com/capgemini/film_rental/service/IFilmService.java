@@ -25,6 +25,9 @@ public interface IFilmService {
 
     FilmDTO addActor(int filmId, int actorId);
 
+    // New: get film by id as DTO (includes category and language names)
+    FilmDTO findById(int filmId);
+
     List<FilmDTO> findByCategory(String category);
 
     List<Integer> findActorsOfFilm(int filmId);
@@ -55,6 +58,9 @@ public interface IFilmService {
     FilmDTO updateRentalRate(int filmId, BigDecimal rate);
     List<FilmDTO> findByLanguage(String lang);
     List<FilmDTO> findByRentalRateLessThan(java.math.BigDecimal rate);
+
+    // Update entire film from FilmCreateDTO; null fields are ignored, lists when non-null will replace associations
+    FilmDTO updateWhole(int filmId, com.capgemini.film_rental.dto.FilmCreateDTO dto);
 
     // Added: search films by exact release year
     List<FilmDTO> findByYear(int year);

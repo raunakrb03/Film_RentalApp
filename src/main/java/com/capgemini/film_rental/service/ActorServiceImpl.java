@@ -12,6 +12,10 @@ import com.capgemini.film_rental.repository.IFilmRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +30,7 @@ public class ActorServiceImpl implements IActorService{
     IFilmRepository filmRepository;
 
     @Override
+    @CacheEvict(value = "actors", allEntries = true)
     public Actor registerActor(Actor actor) {
         return actorRepository.save(actor);
     }
@@ -37,8 +42,26 @@ public class ActorServiceImpl implements IActorService{
     }
 
     @Override
+    @Cacheable(value = "actors", key = "#pageable.pageNumber + '_' + #pageable.pageSize")
+    public Page<com.capgemini.film_rental.dto.ActorDTO> findAll(Pageable pageable) {
+        // Use projection query to avoid loading full Actor entities (better performance)
+        return actorRepository.findAllProjected(pageable);
+    }
+
+    @Override
+    @Cacheable(value = "actors", key = "'all'")
     public List<Actor> getAllActors() {
         return actorRepository.findAll();
+    }
+
+    @Override
+    @CacheEvict(value = "actors", allEntries = true)
+    public String createActor(com.capgemini.film_rental.dto.ActorCreateDTO dto) {
+        Actor actor = new Actor();
+        actor.setFirstName(dto.getFirstName());
+        actor.setLastName(dto.getLastName());
+        actorRepository.save(actor);
+        return "Record Created Successfully";
     }
 
     @Override
@@ -50,6 +73,7 @@ public class ActorServiceImpl implements IActorService{
     }
 
     @Override
+    @CacheEvict(value = "actors", allEntries = true)
     public Actor updateFirstName(int actorId, String firstName) {
         Actor actor = getActorById(actorId);
         actor.setFirstName(firstName);
@@ -57,6 +81,7 @@ public class ActorServiceImpl implements IActorService{
     }
 
     @Override
+    @CacheEvict(value = "actors", allEntries = true)
     public Actor updateLastName(int actorId, String lastName) {
         Actor actor = getActorById(actorId);
         actor.setLastName(lastName);
@@ -107,15 +132,6 @@ public class ActorServiceImpl implements IActorService{
         return films.stream()
                 .map(FilmMapper::toDTO)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public String createActor(ActorCreateDTO dto) {
-        Actor actor = new Actor();
-        actor.setFirstName(dto.getFirstName());
-        actor.setLastName(dto.getLastName());
-        actorRepository.save(actor);
-        return "Record Created Successfully";
     }
 
     @Override

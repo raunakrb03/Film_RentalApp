@@ -1,6 +1,8 @@
 package com.capgemini.film_rental.service;
 
+import com.capgemini.film_rental.dto.PageResponse;
 import com.capgemini.film_rental.dto.StoreDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,12 +20,10 @@ public interface IStoreService {
     List<StoreDTO> findByCountry(String country);
 
     List<StoreDTO.ManagerAndStoreView> managersOverview();
-
     List<Integer> staffIds(int storeId);
-
     StoreDTO createStore(StoreDTO dto);
+    List<StoreDTO> getAll();
 
-    StoreDTO findByPhone(String phone);
-
-    StoreDTO assignManager(int storeId, int managerStaffId);
+    // New paged API and service method
+    PageResponse<StoreDTO> findAllPaged(Pageable pageable);
 }
